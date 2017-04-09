@@ -1,0 +1,92 @@
+<template>
+    <div>
+        <div class="modal-mask" v-if="showModal" transition="modal">
+            <div class="modal-wrapper">
+                <div class="modal-container">
+                    <div class="modal-body">
+                        <slot name="body">
+                            {{message}}
+                        </slot>
+                    </div>
+
+                    <div class="modal-footer">
+                        <slot name="footer">
+                            <button class="btn btn-fill" @click="closeModal">确认</button>
+                        </slot>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+export default {
+    name: 'Modal',
+    computed: {
+        showModal() {
+            return this.$store.getters.modalShow;
+        },
+        message() {
+            return this.$store.getters.modalMessage;
+        }
+    },
+    methods: {
+        closeModal() {
+            this.$store.commit('closeModal');
+        }
+    }
+}
+</script>
+<style lang="postcss" scoped>
+.modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    display: table;
+    transition: opacity .3s ease;
+}
+
+.modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-container {
+    width: 300px;
+    margin: 0px auto;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+    font-family: Helvetica, Arial, sans-serif;
+}
+.modal-footer {
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 0;
+}
+
+.modal-body {
+    margin: 5px 0;
+}
+
+.btn-fill {
+    border-radius: 0;
+    border: 2px solid #6dc7cf;
+}
+
+.modal-enter, .modal-leave {
+    opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave .modal-container {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+</style>
