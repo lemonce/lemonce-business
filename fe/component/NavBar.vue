@@ -44,6 +44,7 @@ export default {
             this.$http.get('user/logout').then(response => {
                 if(response.ok) {
                     this.$store.commit('logout');
+                    this.$store.commit('openModal', '注销成功!');
                 }
             });
         }

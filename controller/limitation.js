@@ -1,12 +1,10 @@
 'use strict';
 const extend = require('lodash').assign;
 const wrap = require('co-express');
+const createError = require('http-errors');
 const LimitationModel = require('../model/limitation');
+const LicenseController = require('./license');
 
-
-const formatDate = function(date) {
-	return date.setHours(date.getHours() + 8);
-};
 
 exports.create = wrap(function * (req, res) {
 	const userId = req.session.user.userId;
@@ -25,15 +23,18 @@ exports.batchCreate = wrap(function * (req, res) {
 	res.status(200).json({});
 });
 
-exports.bind = wrap(function * (req, res) {
+exports.bind = wrap(function * (req, res, next) {
 	const limitation = req.body;
-	const limitId = req.params.limitId;
+	const userId = req.session.user.userId;
 
     //TODO: 请求和license绑定
 
-	const oldLimitation = yield LimitationModel.findById(limitId);
+	const oldLimitation = yield LimitationModel.findUnbindLimit(userId);
+	if(oldLimitation === undefined) {
+		return next(createError(404, '没有可用限额!'));
+	}
 	limitation.bindCnt = oldLimitation.bindCnt + 1;
-	yield LimitationModel.updateById(limitId, limitation);
+	yield LimitationModel.updateById(oldLimitation.limitId, limitation);
 
 	res.status(200).json(limitation);
 });
@@ -66,3 +67,12 @@ exports.getList = wrap(function * (req, res) {
 	res.status(200).json(limitList);
 });
 
+exports.noop = wrap(function * (req, res, next) {
+	const userId = req.body.userId;
+	const license = yield LicenseController.create(userId, 'alpha-0.0.1', 7200);
+
+	if(!license.success) {
+		return next(createError(400, license.msg));
+	}
+	res.status(200).json(license);
+});

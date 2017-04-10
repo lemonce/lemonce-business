@@ -9,11 +9,11 @@ const joinUpdateSet = map.joinUpdateSet;
 const joinInsertSet = map.joinInsertSet;
 
 const BaseColumnList = [
-	'LIMIT_ID', 'USER_ID', 'PURCHASE_DATE', 'BIND_DATE', 'BIND_CNT','VERSION','MACHINE_CODE'
+	'LIMIT_ID', 'USER_ID', 'PURCHASE_DATE', 'BIND_DATE', 'BIND_CNT','VERSION','MACHINE_CODE','ACTIVATE_CODE'
 ];
 
 const BaseWriteList = [
-	'USER_ID', 'PURCHASE_DATE', 'BIND_DATE', 'BIND_CNT','VERSION','MACHINE_CODE'
+	'USER_ID', 'PURCHASE_DATE', 'BIND_DATE', 'BIND_CNT','VERSION','MACHINE_CODE','ACTIVATE_CODE'
 ];
 const LimitationModel = {
 
@@ -22,9 +22,7 @@ const LimitationModel = {
 
 		return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE}
 				WHERE LIMIT_ID = ${limitId}`)
-			.then(function (rows) {
-				return toProp(rows[0]);
-			});
+			.then(rows => toProp(rows[0]));
 	},
 	findByUser: function (userId, mask) {
 		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);
@@ -45,6 +43,13 @@ const LimitationModel = {
 		const insertQuery = joinInsertSet(limitation, BaseWriteList);
 
 		return db.q(`insert into ${LIMITATION_TABLE}${insertQuery}`);
+	},
+	findUnbindLimit: function(userId, mask) {
+		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);
+
+		return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE}
+					WHERE USER_ID = ${userId} AND MACHINE_CODE = null LIMIT 1`)
+			.then(rows => toProp(rows[0]));
 	}
 };
 

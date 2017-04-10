@@ -78,5 +78,6 @@ export default {
 .btn {
     border-radius: 0;
     margin-top: 2rem;
+    border: 2px solid #6dc7cf;
 }
 </style>

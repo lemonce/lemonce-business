@@ -1,5 +1,5 @@
 <template>
-    <div class="account-setting">
+    <div class="account-setting col-md-8">
         <h3>个人信息</h3>
         <hr>
         <form class="form-horizontal">

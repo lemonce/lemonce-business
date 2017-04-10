@@ -23,6 +23,7 @@ export default {
     components: {SideBar},
     mounted() {
         if(!this.user) {
+            this.$store.commit('openModal', '请先登录!');
             this.$router.push('/');
         }
     },

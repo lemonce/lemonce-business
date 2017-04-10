@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="col-md-2">
         <div class="list-group side-bar">
             <router-link  v-for="item in sidelist" class="list-group-item" :to="item.link" :key="item.text">
                 {{item.text}}
@@ -14,18 +14,15 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
-.side-bar {
-    float: left;
-    margin-right: 5rem;
-}
 .side-bar .list-group-item {
     border-radius: 0;
     border: 0;
     font-size: 1.2em;
-    padding: 1rem 5rem;
+    padding: 1rem 3rem;
     margin-bottom: 1rem;
     color: black;
     background-color: #f7f7f7;
+    text-align: center;
 }
 .side-bar .list-group-item:hover {
     background-color: #efefef;
