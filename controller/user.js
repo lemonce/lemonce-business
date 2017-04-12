@@ -9,12 +9,12 @@ exports.login = wrap(function * (req, res, next) {
 	const username = req.body.username;
 	const pw = req.body.password;
 	if (!username || !pw) {
-		return next(createError(404, '参数不齐'));
+		return next(createError(404, 'Invalid Information.'));
 	}
 
 	const user = yield UserModel.search(username, pw);
 	if (user === undefined) {
-		return next(createError(404, '用户名或密码错误'));
+		return next(createError(404, 'Incorrect username or password.'));
 	}
 
 	req.session.user = user;
@@ -25,13 +25,18 @@ exports.create = wrap(function * (req, res, next) {
 	req.checkBody(UserModel.bodyChecker);
 	const errors = req.validationErrors();
 	if (errors) {
-		return next(createError(400, '参数不合法!'));
+		return next(createError(400, 'Invalid parameter.'));
 	}
 
 	const user = req.body;
+
+	if(req.session.captcha !== user.captcha) {
+		return next(createError(400, 'Incorrect Captcha.'));
+	}
+
 	const exist = yield UserModel.isExist('username', user.username);
 	if(exist) {
-		return next(createError(400, '用户名已存在!'));
+		return next(createError(400, 'Username Already Exists.'));
 	}
 
 	const userId = yield UserModel.create(user);
@@ -77,7 +82,7 @@ exports.changePassword = wrap(function * (req, res, next) {
 	const user = req.session.user;
 
 	if(!(yield UserModel.search(user.username, oldPwd))) {
-		return next(createError(404, '密码输入错误!'));
+		return next(createError(404, 'Incorrect Password.'));
 	}
 
 	user.password = newPwd;

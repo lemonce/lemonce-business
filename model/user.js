@@ -64,17 +64,13 @@ const UserModel = {
 	bodyChecker: {
 		username: {
 			isLength: {
-				options: [{min: 6, max: 40}]
+				options: [{min: 6, max: 20}]
 			},
 			errorMessage: 'invalid name'
 		},
-		email: {
-			isEmail: true,
-			errorMessage: 'invalid email'
-		},
 		password: {
 			isLength: {
-				options: [{min: 6, max: 40}]
+				options: [{min: 6, max: 30}]
 			},
 			errorMessage: 'invalid password'
 		}

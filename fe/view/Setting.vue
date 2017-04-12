@@ -1,55 +1,55 @@
 <template>
     <div class="account-setting col-md-8">
-        <h3>个人信息</h3>
+        <h3>Profile</h3>
         <hr>
         <form class="form-horizontal">
             <div class="form-group">
-                <label class="control-label col-md-4" for="username">用户名</label>
+                <label class="control-label col-md-4" for="username">Username</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="username" placeholder="" v-model="user.username" disabled>
+                    <input type="text" class="form-control" id="username" placeholder="6-12" v-model="user.username" disabled>
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-md-4" for="email">邮箱</label>
+                <label class="control-label col-md-4" for="email">Email</label>
                 <div class="col-md-8">
                     <input type="email" class="form-control" id="email" placeholder="" v-model="email">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-md-4" for="telephone">电话</label>
+                <label class="control-label col-md-4" for="telephone">Telephone</label>
                 <div class="col-md-8">
                     <input type="text" class="form-control" id="telephone" placeholder="" v-model="phone">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-md-4" for="telephone">注册时间</label>
+                <label class="control-label col-md-4" for="telephone">Register Date</label>
                 <div class="col-md-8">{{user.registerTime | dateFilter}}</div>
             </div>
             <div class="form-group">
                 <label class="control-label col-md-4" for="telephone"></label>
                 <div class="col-md-8">
-                    <button type="submit" class="btn btn-fill" @click="submitInfo">修改</button>
-                    <button type="submit" class="btn btn-outline" @click="resetInfo">重置</button>
+                    <button type="submit" class="btn btn-fill" @click="submitInfo">Submit</button>
+                    <button type="submit" class="btn btn-outline" @click="resetInfo">Reset</button>
                 </div>
             </div>
         </form>
-        <h3>密码更改</h3>
+        <h3>Change password</h3>
         <hr>
         <form class="form-horizontal">
             <div class="form-group">
-                <label class="control-label col-md-4" for="old_password">旧密码</label>
+                <label class="control-label col-md-4" for="old_password">Old password</label>
                 <div class="col-sm-8">
                     <input type="password" class="form-control" id="old_password" placeholder="" v-model="pwd">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-md-4" for="new_passwrd">新密码</label>
+                <label class="control-label col-md-4" for="new_passwrd">New password</label>
                 <div class="col-md-8">
                     <input type="password" class="form-control" id="new_passwrd" placeholder="" v-model="newPwd">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-md-4" for="confirm_password">重复密码</label>
+                <label class="control-label col-md-4" for="confirm_password">Confirm new password</label>
                 <div class="col-md-8">
                     <input type="password" class="form-control" id="confirm_password" placeholder="" v-model="confirmPwd">
                 </div>
@@ -57,7 +57,7 @@
             <div class="form-group">
                 <label class="control-label col-md-4" for="telephone"></label>
                 <div class="col-md-8">
-                    <button type="submit" class="btn btn-fill" @click="changePassword">提交</button>
+                    <button type="submit" class="btn btn-fill" @click="changePassword">Submit</button>
                 </div>
             </div>
         </form>
@@ -96,14 +96,14 @@ export default {
                 phone: this.phone
             }).then(response => {
                 if(response.ok) {
-                    this.$store.commit('openModal', '修改成功!');
+                    this.$store.commit('openModal', 'Success!');
                     this.$store.commit('updateUser', response.body);
                 }
             });
         },
         changePassword() {
             if(this.newPwd !== this.confirmPwd) {
-                this.openModal('两次密码不一致!');
+                this.$store.commit('openModal', 'Password not match confirmation.')
                 return;
             }
             this.$http.post('user/changepwd', {
@@ -111,13 +111,12 @@ export default {
                 newpassword: this.newPwd
             }).then(response => {
                 if(response.ok) {
-                    this.$store.commit('openModal', '修改密码成功!');
+                    this.$store.commit('openModal', 'Change Password Success.');
+                    this.pwd = '';
+                    this.newPwd = '';
+                    this.confirmPwd = '';
                 }
-            })
-        },
-        openModal(message) {
-            this.message = message;
-            this.showModal = true;
+            }).catch(err => this.$store.commit('openModal', err.body.msg));
         }
     },
     filters: {

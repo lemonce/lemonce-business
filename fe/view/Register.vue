@@ -1,42 +1,55 @@
 <template>
-<div>
-    <div class="page-head main-bg-color">
-        <div class="container">
-            <h1>用户注册</h1>
-        </div>
-    </div>
+<div class="register-page">
     <div class="container register-container">
         <div class="panel panel-default">
+            <div class="login">Already have account？<router-link to="/">Sign in</router-link></div>
+            <div class="panel-header">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                Sign up
+            </div>
             <div class="panel-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="username">用户名</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control" id="username" placeholder="" v-model="username" />
+                        <label class="control-label col-md-3" for="username">Username</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" id="username" placeholder="6-20 characters" v-model="username" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="password">密码</label>
-                        <div class="col-md-6">
-                            <input type="password" class="form-control" id="password" placeholder="" v-model="password">
+                        <label class="control-label col-md-3" for="password">Password</label>
+                        <div class="col-md-7">
+                            <input type="password" class="form-control" id="password" placeholder="6-20 characters" v-model="password">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="email">邮箱</label>
-                        <div class="col-md-6">
-                            <input type="email" class="form-control" id="email" placeholder="" v-model="email">
+                        <label class="control-label col-md-3" for="confirmPassword">Confirm Password</label>
+                        <div class="col-md-7">
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="confirm password" v-model="confirmPassword">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="phone">电话</label>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control" id="phone" placeholder="" v-model="phone">
+                        <label class="control-label col-md-3" for="email">Email</label>
+                        <div class="col-md-7">
+                            <input type="email" class="form-control" id="email" placeholder="your email" v-model="email">
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="phone">Telephone</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" id="phone" placeholder="your telephone" v-model="phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="phone">Captcha</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control captcha" placeholder="" v-model="captcha">
+                        </div>
+                        <div v-html="captchaSvg" class="col-md-3"></div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for=""></label>
-                        <div class="col-md-8">
-                            <button type="submit" class="btn btn-outline" @click="register">注册</button>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-fill" @click="register">Register</button>
                         </div>
                     </div>
                 </form>
@@ -52,22 +65,37 @@ export default {
         return {
             username: '',
             password: '',
+            confirmPassword: '',
             email: '',
-            phone: ''
+            phone: '',
+            captcha: '',
+            captchaSvg: ''
         }
+    },
+    created() {
+        this.$http.get('user/captcha').then(response => {
+            if(response.ok) {
+                this.captchaSvg = response.body;
+            }
+        });
     },
     methods: {
         register() {
+            if(this.password !== this.confirmPassword) {
+                this.$store.commit('openModal', 'Password not match confirmation!');
+                return;
+            }
             this.$http.post('user/add',{
                 username: this.username,
                 password: this.password,
                 email: this.email,
-                phone: this.phone
+                phone: this.phone,
+                captcha: this.captcha
             }).then(response => {
                 if(response.ok) {
-                    this.$store.commit('openModal', '注册成功!');
+                    this.$store.commit('openModal', 'Registe Success.');
                     this.$store.commit('updateUser', response.body)
-                    this.$router.push('/product');
+                    this.$router.push('/account/manage');
                 }
             }).catch(err => {
                 this.$store.commit('openModal', err.body.msg);
@@ -77,18 +105,45 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
+.register-page {
+    background-color: #f8f8f8;
+    height: auto;
+    position: absolute;
+    bottom: 0;
+    top: 50px;
+    width: 100%;
+}
 .register-container {
-    margin-top: 2rem;
+    padding-top: 60px;
+    width: 600px;
+    margin: 0 auto;
+}
+.register-container .panel-header {
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+.register-container .login{
+    float: right;
+}
+.register-container .login a {
+    color: #4eb4b4;
+    cursor: pointer;
 }
 .register-container .panel {
-    border: 0;
-    background-color: #f7f7f7;
+    padding: 14px 30px;
+    border-radius: 4px;
+    border: 1px solid #E3E9ED;
 }
 form input {
+    height: 40px;
+    margin: 0 0 1rem;
     border-radius: 0;
+    border: 1px solid #71c3c3;
 }
 form button {
+    width: 100%;
     border-radius: 0;
+    border: 2px solid white;
 }
 
 </style>

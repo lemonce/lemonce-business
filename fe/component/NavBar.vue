@@ -7,19 +7,19 @@
                 <a href="#" class="navbar-brand">Lemonce</a>
             </div>
             <ul class="nav navbar-nav">
-                <li class=""><router-link to="/">首页</router-link></li>
-                <li class=""><router-link to="/product">购买套餐</router-link></li>
-                <li class=""><router-link to="/account/manage">我的账户</router-link></li>
+                <li class=""><router-link to="/">Home</router-link></li>
+                <!--<li class=""><router-link to="/product">购买套餐</router-link></li>-->
+                <li class=""><router-link to="/account/manage">Management</router-link></li>
             </ul>
             <div v-if="isLoggedIn">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class=""><a href="#" class="current-user">当前用户: {{user.username}}</a></li>
-                    <li class=""><a href="#" @click="logout">注销</a></li>
+                    <li class=""><a href="#" class="current-user">User: {{user.username}}</a></li>
+                    <li class=""><a href="#" @click="logout">Sign out</a></li>
                 </ul>
             </div>
             <div v-else>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class=""><router-link to="/register">注册</router-link></li>
+                    <li class=""><router-link to="/register">Sign up</router-link></li>
                 </ul>
             </div>
 
@@ -44,7 +44,6 @@ export default {
             this.$http.get('user/logout').then(response => {
                 if(response.ok) {
                     this.$store.commit('logout');
-                    this.$store.commit('openModal', '注销成功!');
                 }
             });
         }

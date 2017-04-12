@@ -11,7 +11,7 @@
 
                     <div class="modal-footer">
                         <slot name="footer">
-                            <button class="btn btn-fill" @click="closeModal">确认</button>
+                            <button class="btn btn-fill" @click="closeModal">OK</button>
                         </slot>
                     </div>
                 </div>

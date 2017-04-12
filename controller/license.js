@@ -1,12 +1,13 @@
 const rp = require('request-promise');
 const HOST = 'http://139.129.225.83:8080/license';
 
-exports.create = function (userID, version, period) {
+exports.activate = function (userID, version, machineCode, period) {
     const options = {
         method: 'POST',
         uri: `${HOST}/new`,
         body: {
-            userID, period, version
+            period, version, machineCode,
+            userID: String(userID)
         },
         json: true
     }

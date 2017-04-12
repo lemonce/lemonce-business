@@ -27,12 +27,21 @@ exports.bind = wrap(function * (req, res, next) {
 	const limitation = req.body;
 	const userId = req.session.user.userId;
 
-    //TODO: 请求和license绑定
-
 	const oldLimitation = yield LimitationModel.findUnbindLimit(userId);
 	if(oldLimitation === undefined) {
-		return next(createError(404, '没有可用限额!'));
+		return next(createError(404, 'There is no valid product limit for your account.'));
 	}
+
+    //请求和license绑定
+	const result = yield LicenseController.activate(
+		userId, oldLimitation.version, limitation.machineCode, 7200);
+
+	if(!result.success) {
+		return next(createError(400, result.msg));
+	}
+
+	limitation.activateCode = result.license.activeCode;
+
 	limitation.bindCnt = oldLimitation.bindCnt + 1;
 	yield LimitationModel.updateById(oldLimitation.limitId, limitation);
 
@@ -41,7 +50,8 @@ exports.bind = wrap(function * (req, res, next) {
 
 exports.unBind = wrap(function * (req, res) {
 	const limitId = req.params.limitId;
-	const limitation = {machineCode: null};
+	const limitation = {machineCode: null, bindDate: null};
+
     //TODO: 请求和license解除绑定
     
 
@@ -68,11 +78,11 @@ exports.getList = wrap(function * (req, res) {
 });
 
 exports.noop = wrap(function * (req, res, next) {
-	const userId = req.body.userId;
-	const license = yield LicenseController.create(userId, 'alpha-0.0.1', 7200);
+	// const userId = req.body.userId;
+	// const license = yield LicenseController.create(userId, 'alpha-0.0.1', 7200);
 
-	if(!license.success) {
-		return next(createError(400, license.msg));
-	}
-	res.status(200).json(license);
+	// if(!license.success) {
+	// 	return next(createError(400, license.msg));
+	// }
+	res.status(200).json({});
 });

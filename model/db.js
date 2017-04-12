@@ -54,6 +54,5 @@ function joinColumn(obj, props) {
 module.exports = {
 	escape: mysql.escape,
 	joinColumn: joinColumn,
-	q: genericQuery,
-	genericQuery: genericQuery
+	q: genericQuery
 };

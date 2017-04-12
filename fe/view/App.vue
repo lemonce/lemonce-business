@@ -12,14 +12,7 @@ import FootBar from '../component/FootBar';
 import Modal from '../component/Modal';
 export default {
     name: 'Business',
-    components: {NavBar, FootBar, Modal},
-    mounted() {
-        this.$http.get('user/info').then(response => {
-            if(response.ok) {
-                this.$store.commit('updateUser', response.body);
-            }
-        })
-    }
+    components: {NavBar, FootBar, Modal}
 }
 </script>
 <style lang="postcss" scoped>

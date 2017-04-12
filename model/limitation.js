@@ -48,7 +48,7 @@ const LimitationModel = {
 		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);
 
 		return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE}
-					WHERE USER_ID = ${userId} AND MACHINE_CODE = null LIMIT 1`)
+					WHERE USER_ID = ${userId} AND MACHINE_CODE IS NULL LIMIT 1`)
 			.then(rows => toProp(rows[0]));
 	}
 };

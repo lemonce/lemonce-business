@@ -6,19 +6,19 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h3>
-                            添加绑定
-                            <small v-if="bindIndex">序号: {{bindIndex}}</small>
-                            <small v-if="bindVersion">版本: {{bindVersion}}</small>
+                            Bind
+                            <small v-if="bindIndex">index: {{bindIndex}}</small>
+                            <small v-if="bindVersion">version: {{bindVersion}}</small>
                         </h3>
                         <hr>
                         <form class="form-horizontal">
                             <div class="form-group row">
-                                <label class="control-label col-sm-2 col-xs-3" for="machine_code">机器码</label>
+                                <label class="control-label col-sm-2 col-xs-3" for="machine_code">Machine Code</label>
                                 <div class="col-sm-4 col-xs-9">
                                     <input type="text" class="form-control" id="machine_code" placeholder="" v-model="bindMachineCode">
                                 </div>
                                 <div class="col-sm-4 col-xs-4">
-                                    <button type="submit" class="btn btn-fill" @click="bindLimit">绑定</button>
+                                    <button type="submit" class="btn btn-fill" @click="bindLimit">Bind</button>
                                 </div>
                             </div>
                         </form>
@@ -27,27 +27,27 @@
             </div>
             <div class="panel panel-default product-panel col-md-3 col-sm-12">
                 <div class="panel-body">
-                    <h3>已购产品</h3>
-                    <div class="panel-label"><label for="">已购数量:</label>{{totalCnt}}</div>
-                    <div class="panel-label"><label for="">已绑定:</label>{{bindedCnt}}</div>
-                    <div class="panel-label"><label for="">未绑定:</label>{{unbindedCnt}}</div>
+                    <h3>Product</h3>
+                    <div class="panel-label"><label for="">Total:</label> {{totalCnt}}</div>
+                    <div class="panel-label"><label for="">Binded:</label> {{bindedCnt}}</div>
+                    <div class="panel-label"><label for="">Unbinded:</label> {{unbindedCnt}}</div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h3>绑定列表</h3>
+                <h3>Bind List</h3>
                 <hr>
                 <table class="table table-hover bind-table">
                     <thead>
                         <tr>
                             <!--<th></th>-->
                             <th>#</th>
-                            <th>版本号</th>
+                            <th>version</th>
                             <!--<th>绑定次数</th>-->
-                            <th>绑定时间</th>
-                            <th>机器码</th>
-                            <th>激活码</th>
+                            <th>Bind Date</th>
+                            <th>Machine Code</th>
+                            <th>Active Code</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -61,13 +61,13 @@
                             <td class="break-line">{{limit.bindDate | dateFilter}}</td>
                             <td class="break-line">
                                 <span v-if="limit.machineCode">{{limit.machineCode}}</span>
-                                <small v-else>无</small>
+                                <small v-else>none</small>
                             </td>
                             <td class="break-line">
                                 <span v-if="limit.activateCode">{{limit.activateCode}}</span>
-                                <small v-else>无</small>
+                                <small v-else>none</small>
                             </td>
-                            <td><span class="label label-info label-unbind" @click="unbindLimit(index)">解绑</span></td>
+                            <td><span class="label label-info label-unbind" @click="unbindLimit(index)">Unbind</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -111,11 +111,11 @@ export default {
                 machineCode: this.bindMachineCode
             }).then(response => {
                 if(response.ok) {
-                    this.$store.commit('openModal', '绑定成功!');
+                    this.$store.commit('openModal', 'Bind Success!');
                     this.updateLimitList();
                     this.clearBindInfo();
                 }
-            })
+            }).catch(err => this.$store.commit('openModal', err.body.msg));
         },
         clearBindInfo() {
             this.bindIndex = '',
@@ -126,10 +126,10 @@ export default {
             const limitId = this.limitList[index].limitId;
             this.$http.get(`limit/unbind/${limitId}`).then(response => {
                 if(response.ok) {
-                    this.$store.commit('openModal', '解除绑定成功!');
+                    this.$store.commit('openModal', 'Success!');
                     this.updateLimitList();
                 }
-            });
+            }).catch(err => this.$store.commit('openModal', err.body.msg));
         },
         chooseLimit(index) {
             const limit = this.limitList[index];
@@ -147,7 +147,7 @@ export default {
                 if(response.ok) {
                     this.$store.commit('updateLimitList', response.body);
                 }
-            })
+            });
         }
     },
     filters: {

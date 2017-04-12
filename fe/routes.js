@@ -10,10 +10,10 @@ export default [
         path: '/',
         component: Home
     },
-    {
-        path: '/product',
-        component: Product
-    },
+    // {
+    //     path: '/product',
+    //     component: Product
+    // },
     {
         path: '/register',
         component: Register

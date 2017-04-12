@@ -6,8 +6,8 @@ const interceptor = require('./interceptor');
 
 const router = new express.Router();
 
-router.post('/add', interceptor.requireLogin, Limitation.create);
-router.post('/add/:number', interceptor.requireLogin, Limitation.batchCreate);
+// router.post('/add', interceptor.requireLogin, Limitation.create);
+// router.post('/add/:number', interceptor.requireLogin, Limitation.batchCreate);
 router.get('/list', interceptor.requireLogin, Limitation.getList);
 router.post('/update/:userId', Limitation.update);
 

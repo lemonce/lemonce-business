@@ -1,10 +1,5 @@
 <template>
     <div>
-        <div class="page-head main-bg-color">
-            <div class="container">
-                <h1>我的账户</h1>
-            </div>
-        </div>
         <div class="page-content">
             <div class="row">
                 <div class="container">
@@ -22,21 +17,24 @@ export default {
     name: 'Account',
     components: {SideBar},
     mounted() {
-        if(!this.user) {
-            this.$store.commit('openModal', '请先登录!');
-            this.$router.push('/');
-        }
-    },
-    computed: {
-        user() {
-            return this.$store.getters.user;
-        }
+        this.$http.get('user/info').then(response => {
+            if(response.ok && response.body) {
+                this.$store.commit('updateUser', response.body);
+                return;
+            } else {
+                throw new Error();
+            }
+        }).catch(err => {
+            this.$store.commit('openModal', 'Please Sign In!');
+            this.$router.push('/');  
+        })
+        
     },
     data () {
         return {
             sidelist: [
-                {link: '/account/manage', text: '产品管理'},
-                {link: '/account/setting', text: '账户设置'}
+                {link: '/account/manage', text: 'Product'},
+                {link: '/account/setting', text: 'Account'}
             ]
         }
     },
