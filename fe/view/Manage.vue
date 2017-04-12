@@ -167,7 +167,7 @@ export default {
     margin-top: 0.5rem;
 }
 .btn-fill {
-    border: 2px solid #6dc7cf;
+    border: 2px solid #4eb4b4;
     border-radius: 0;
 }
 .panel-label {
@@ -196,7 +196,7 @@ export default {
 .label-unbind {
     cursor: pointer;
     background-color: #4eb4b4; 
-    border: 2px solid #6dc7cf;
+    border: 2px solid #4eb4b4;
 }
 .label-unbind:hover {
     background-color: #6dc7cf;

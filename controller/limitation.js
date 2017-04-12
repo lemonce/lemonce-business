@@ -27,6 +27,11 @@ exports.bind = wrap(function * (req, res, next) {
 	const limitation = req.body;
 	const userId = req.session.user.userId;
 
+	const isExist = yield LimitationModel.findByMachineCode(limitation.machineCode);
+	if(isExist) {
+		return next(createError(404, 'This machine code has already binded to a license.'));
+	}
+
 	const oldLimitation = yield LimitationModel.findUnbindLimit(userId);
 	if(oldLimitation === undefined) {
 		return next(createError(404, 'There is no valid product limit for your account.'));
@@ -48,12 +53,19 @@ exports.bind = wrap(function * (req, res, next) {
 	res.status(200).json(limitation);
 });
 
-exports.unBind = wrap(function * (req, res) {
+exports.unBind = wrap(function * (req, res, next) {
 	const limitId = req.params.limitId;
-	const limitation = {machineCode: null, bindDate: null};
 
-    //TODO: 请求和license解除绑定
-    
+	const oldLimitation = yield LimitationModel.findById(limitId);
+
+    //请求和license解除绑定,
+    //const result = yield LicenseController.delete(oldLimitation.machineCode);
+
+	// if(!result.success) {
+	// 	return next(createError(400, result.msg));
+	// }
+
+	const limitation = {machineCode: null, bindDate: null, activateCode: null};
 
 	yield LimitationModel.updateById(limitId, limitation);
 

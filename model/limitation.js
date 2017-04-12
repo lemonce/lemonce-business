@@ -50,6 +50,13 @@ const LimitationModel = {
 		return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE}
 					WHERE USER_ID = ${userId} AND MACHINE_CODE IS NULL LIMIT 1`)
 			.then(rows => toProp(rows[0]));
+	},
+
+	findByMachineCode: function(machineCode) {
+		machineCode = db.escape(machineCode);
+		return db.q(`SELECT COUNT(1) FROM ${LIMITATION_TABLE}
+					WHERE MACHINE_CODE = ${machineCode}`)
+			.then(rows => Boolean(rows[0]['COUNT(1)']));
 	}
 };
 

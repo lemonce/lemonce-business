@@ -10,6 +10,18 @@ exports.activate = function (userID, version, machineCode, period) {
             userID: String(userID)
         },
         json: true
-    }
+    };
+    return rp(options);
+}
+
+exports.delete = function (machineCode) {
+    const options = {
+        method: 'DELETE',
+        uri: `${HOST}/delete`,
+        body: {
+            machineCode
+        },
+        json: true
+    };
     return rp(options);
 }
