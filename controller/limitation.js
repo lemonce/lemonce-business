@@ -1,75 +1,47 @@
 'use strict';
-const extend = require('lodash').assign;
 const wrap = require('co-express');
 const createError = require('http-errors');
 const LimitationModel = require('../model/limitation');
-const LicenseController = require('./license');
-
-
-exports.create = wrap(function * (req, res) {
-	const userId = req.session.user.userId;
-	const limitation = extend({userId}, req.body);
-	yield LimitationModel.create(limitation);
-	res.status(200).json({});
-});
-
-exports.batchCreate = wrap(function * (req, res) {
-	const userId = req.session.user.userId;
-	const limitation = extend({userId}, req.body);
-	const number = req.params.number;
-	for( let i = 0 ; i < number ; i++ ) {
-		yield LimitationModel.create(limitation);
-	}
-	res.status(200).json({});
-});
+const LicenseModel = require('../model/license');
+const LicenseServer = require('../model/license-server');
 
 exports.bind = wrap(function * (req, res, next) {
-	const limitation = req.body;
 	const userId = req.session.user.userId;
+	const machineCode = req.body.machineCode;
 
-	const isExist = yield LimitationModel.findByMachineCode(limitation.machineCode);
-	if(isExist) {
-		return next(createError(404, 'This machine code has already binded to a license.'));
-	}
+	const limitation = yield LimitationModel.findByUser(userId);
+	const bindCnt = yield LicenseModel.findCnt('userId', userId);
 
-	const oldLimitation = yield LimitationModel.findUnbindLimit(userId);
-	if(oldLimitation === undefined) {
+	if(!limitation || limitation.limitCnt <= bindCnt) {
 		return next(createError(404, 'There is no valid product limit for your account.'));
 	}
 
     //请求和license绑定
-	const result = yield LicenseController.activate(
-		userId, oldLimitation.version, limitation.machineCode, 7200);
+	const result = yield LicenseServer.activate(
+		userId, limitation.version, machineCode, 7200);
 
 	if(!result.success) {
 		return next(createError(400, result.msg));
 	}
 
-	limitation.activateCode = result.license.activeCode;
+	yield LicenseModel.create({userId, licenseId: result.license.id});
 
-	limitation.bindCnt = oldLimitation.bindCnt + 1;
-	yield LimitationModel.updateById(oldLimitation.limitId, limitation);
-
-	res.status(200).json(limitation);
+	res.status(200).json({});
 });
 
 exports.unBind = wrap(function * (req, res, next) {
-	const limitId = req.params.limitId;
-
-	const oldLimitation = yield LimitationModel.findById(limitId);
+	const licenseId = req.params.licenseId;
 
     //请求和license解除绑定,
-    const result = yield LicenseController.delete(oldLimitation.activateCode);
+    const result = yield LicenseServer.delete(licenseId);
 
 	if(!result.success) {
 		return next(createError(400, result.msg));
 	}
 
-	const limitation = {machineCode: null, bindDate: null, activateCode: null};
+	yield LicenseModel.deleteById(licenseId);
 
-	yield LimitationModel.updateById(limitId, limitation);
-
-	res.status(200).json(limitation);
+	res.status(200).json({});
 });
 
 exports.update = wrap(function * (req, res) {
@@ -81,12 +53,24 @@ exports.update = wrap(function * (req, res) {
 	res.status(200).json(newLimitation);
 });
 
-exports.getList = wrap(function * (req, res) {
+exports.getLimitation = wrap(function * (req, res) {
 	const userId = req.session.user.userId;
 
-	const limitList = yield LimitationModel.findByUser(userId);
+	const limit = yield LimitationModel.findByUser(userId);
+	limit.bindCnt = yield LicenseModel.findCnt('userId', userId);
 
-	res.status(200).json(limitList);
+	res.status(200).json(limit);
+});
+
+exports.getBindList = wrap(function * (req, res, next) {
+	const userId = req.session.user.userId;
+
+	const result = yield LicenseServer.getListByUser(userId);
+	if(!result.success) {
+		return next(createError(400, result.msg));
+	}
+
+	res.status(200).json(result.licenses);
 });
 
 exports.noop = wrap(function * (req, res, next) {

@@ -8,7 +8,10 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         user: null,
-        limitList: [],
+        limit: {
+            info: null,
+            bindList: []
+        },
         modalShow: false,
         modalMessage: '操作成功!'
     },

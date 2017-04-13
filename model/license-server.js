@@ -12,16 +12,25 @@ exports.activate = function (userID, version, machineCode, period) {
         json: true
     };
     return rp(options);
-}
+};
 
-exports.delete = function (activeCode) {
+exports.delete = function (id) {
     const options = {
         method: 'DELETE',
-        uri: `${HOST}/delete`,
-        body: {
-            activeCode
+        uri: `${HOST}/${id}`,
+        json: true
+    };
+    return rp(options);
+};
+
+exports.getListByUser = function (userId) {
+    const options = {
+        uri: `${HOST}`,
+        qs: {userId},
+        headers: {
+            'User-Agent': 'Request-Promise'
         },
         json: true
     };
     return rp(options);
-}
+};

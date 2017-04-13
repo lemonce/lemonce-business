@@ -9,11 +9,11 @@ const joinUpdateSet = map.joinUpdateSet;
 const joinInsertSet = map.joinInsertSet;
 
 const BaseColumnList = [
-	'LIMIT_ID', 'USER_ID', 'PURCHASE_DATE', 'BIND_DATE', 'BIND_CNT','VERSION','MACHINE_CODE','ACTIVATE_CODE'
+	'LIMIT_ID', 'USER_ID', 'LIMIT_CNT', 'VERSION'
 ];
 
 const BaseWriteList = [
-	'USER_ID', 'PURCHASE_DATE', 'BIND_DATE', 'BIND_CNT','VERSION','MACHINE_CODE','ACTIVATE_CODE'
+	'USER_ID', 'LIMIT_CNT', 'VERSION'
 ];
 const LimitationModel = {
 
@@ -29,9 +29,7 @@ const LimitationModel = {
 
 		return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE}
 				WHERE USER_ID = ${userId}`)
-			.then(function (rows) {
-				return rows.map(toProp);
-			});
+			.then(rows => toProp(rows[0]));
 	},
 	updateById: function (limitId, limitation) {
 		const updateQuery = joinUpdateSet(limitation, BaseWriteList);
@@ -44,20 +42,18 @@ const LimitationModel = {
 
 		return db.q(`insert into ${LIMITATION_TABLE}${insertQuery}`);
 	},
-	findUnbindLimit: function(userId, mask) {
-		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);
-
-		return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE}
-					WHERE USER_ID = ${userId} AND MACHINE_CODE IS NULL LIMIT 1`)
-			.then(rows => toProp(rows[0]));
-	},
-
-	findByMachineCode: function(machineCode) {
-		machineCode = db.escape(machineCode);
-		return db.q(`SELECT COUNT(1) FROM ${LIMITATION_TABLE}
-					WHERE MACHINE_CODE = ${machineCode}`)
-			.then(rows => Boolean(rows[0]['COUNT(1)']));
-	}
+	updateLimitCntByUser: function (userId, value) {
+		return db.q(`UPDATE ${LIMITATION_TABLE} SET LIMIT_CNT = LIMIT_CNT + ${value}
+                    WHERE USER_ID = ${userId}`);
+    },
+    existUnbindLimit: function (userId, mask) {
+        const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);
+        return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE} WHERE USER_ID = ${userId}`)
+            .then(rows => {
+                const limit = toProp(rows[0]);
+                return limit && limit.bindCnt > limit.limitCnt;
+            });
+    }
 };
 
 module.exports = LimitationModel;

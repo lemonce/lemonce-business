@@ -6,20 +6,12 @@ export const user = state => {
     return state.user;
 };
 
-export const limitList = state => {
-    return state.limitList;
+export const bindList = state => {
+    return state.limit.bindList;
 };
 
-export const totalLimitCnt = state => {
-    return state.limitList.length;
-};
-
-export const bindedLimitCnt = state => {
-    return state.limitList.filter(limit => limit.machineCode).length;
-};
-
-export const unbindedLimitCnt = (state, getters) => {
-    return getters.totalLimitCnt - getters.bindedLimitCnt;
+export const limitInfo = state => {
+    return state.limit.info;
 };
 
 export const modalShow = state => {

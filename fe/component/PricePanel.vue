@@ -28,20 +28,20 @@ export default {
     },
     methods: {
         buyProduct(version, number) {
+            console.log(this.user);
             if(!this.user) {
                 //alert login
-                this.$store.commit('openModal', '请先登录!');
+                this.$store.commit('openModal', 'Please Sign In!');
                 return;
             }
             // TODO pay
             // If pay success
             this.addLimitation(version, number);
         },
-        addLimitation(version, number) {
+        addLimitation(version, limitCnt) {
             const purchaseDate = this.getDate();
-            this.$http.post(`limit/add/${number}`, {
-                userId: this.user.userId,
-                purchaseDate, version
+            this.$http.post(`purchase/add`, {
+                purchaseDate, version, limitCnt
             }).then(response => {
                 if(response.ok) {
                     this.$store.commit('openModal', '购买成功!');

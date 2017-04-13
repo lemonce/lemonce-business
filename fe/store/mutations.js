@@ -6,9 +6,13 @@ export const logout = state => {
     state.user = null;
 };
 
-export const updateLimitList = (state, list) => {
-    state.limitList = list;
+export const updateBindList = (state, list) => {
+    state.limit.bindList = list;
 };
+
+export const updateLimitInfo = (state, info) => {
+    state.limit.info = info;
+}
 
 export const openModal = (state, message) => {
     state.modalMessage = message;

@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const wrap = require('co-express');
 const svgCaptcha = require('svg-captcha');
 const UserModel = require('../model/user');
+const LimitModel = require('../model/limitation');
 
 
 exports.login = wrap(function * (req, res, next) {
@@ -41,6 +42,7 @@ exports.create = wrap(function * (req, res, next) {
 
 	const userId = yield UserModel.create(user);
 	const result = yield UserModel.findById(userId);
+	yield LimitModel.create({userId});
 	
 	req.session.user = result;
 
