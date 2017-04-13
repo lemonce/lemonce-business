@@ -49,7 +49,7 @@ CREATE TABLE `biz_limitation` (
   `LIMIT_ID` int(11) NOT NULL AUTO_INCREMENT,
   `USER_ID` int(11) NOT NULL,
   `LIMIT_CNT` int(11) DEFAULT '0',
-  `VERSION` varchar(45) DEFAULT NULL,
+  `VERSION` varchar(45) DEFAULT '',
   PRIMARY KEY (`LIMIT_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;

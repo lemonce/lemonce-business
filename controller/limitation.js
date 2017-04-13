@@ -70,7 +70,16 @@ exports.getBindList = wrap(function * (req, res, next) {
 		return next(createError(400, result.msg));
 	}
 
-	res.status(200).json(result.licenses);
+	const bindLicenses = yield LicenseModel.findByUser(userId);
+
+	const bindList = result.licenses.filter(license => {
+		for( let obj of bindLicenses) {
+			if(obj.licenseId === license.id) return true;
+		}
+		return false;
+	});
+
+	res.status(200).json(bindList);
 });
 
 exports.noop = wrap(function * (req, res, next) {
