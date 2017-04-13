@@ -14,12 +14,12 @@ exports.activate = function (userID, version, machineCode, period) {
     return rp(options);
 }
 
-exports.delete = function (machineCode) {
+exports.delete = function (activeCode) {
     const options = {
         method: 'DELETE',
         uri: `${HOST}/delete`,
         body: {
-            machineCode
+            activeCode
         },
         json: true
     };

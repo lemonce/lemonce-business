@@ -59,11 +59,11 @@ exports.unBind = wrap(function * (req, res, next) {
 	const oldLimitation = yield LimitationModel.findById(limitId);
 
     //请求和license解除绑定,
-    //const result = yield LicenseController.delete(oldLimitation.machineCode);
+    const result = yield LicenseController.delete(oldLimitation.activateCode);
 
-	// if(!result.success) {
-	// 	return next(createError(400, result.msg));
-	// }
+	if(!result.success) {
+		return next(createError(400, result.msg));
+	}
 
 	const limitation = {machineCode: null, bindDate: null, activateCode: null};
 
