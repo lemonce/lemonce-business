@@ -1,3 +1,5 @@
+.env
+public
 output
 /dist
 # Logs
