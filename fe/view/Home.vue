@@ -58,6 +58,7 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
+
 .home {
     background-color: #f8f8f8;
     height: auto;
@@ -105,6 +106,13 @@ export default {
     border-radius: 0;
     border: 2px solid white;
 }
-
+@media (max-width: 732px) {
+    .login{
+        width:280px;
+    }
+    .login form {
+        padding: 0;
+    }
+}
 
 </style>

@@ -134,6 +134,10 @@ export default {
     border-radius: 4px;
     border: 1px solid #E3E9ED;
 }
+.register-container .panel-header {
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
 form input {
     height: 40px;
     margin: 0 0 1rem;
@@ -146,4 +150,12 @@ form button {
     border: 2px solid white;
 }
 
+@media (max-width: 732px) {
+    .register-container{
+        width:280px;
+    }
+    .register-container .panel-body{
+        padding: 0;
+    }
+}
 </style>
