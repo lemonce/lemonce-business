@@ -1,7 +1,7 @@
 <template>
 <div>
     <nav-bar></nav-bar>
-    <router-view></router-view>
+    <router-view id="main"></router-view>
     <foot-bar></foot-bar>
     <modal></modal>
 </div>
@@ -16,5 +16,10 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
-    
+
+#main {
+    min-height: 500px;
+    padding-bottom: 100px;
+}
+
 </style>

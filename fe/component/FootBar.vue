@@ -1,26 +1,29 @@
 <template>
-<div>
-    <nav class="navbar navbar-inverse navbar-fixed-bottom">
+<footer class="navbar navbar-inverse">
+    <div class="container">
         <div class="row">
-            <div class="container foot-bar">
-                <h5>©2014-2017 or-change, Co., Ltd. All rights reserved. JIN-ICP14003159-2</h5>
-            </div>
+            <h5>©2014-2017 or-change, Co., Ltd. All rights reserved. JIN-ICP14003159-2</h5>
         </div>
-    </nav>
-</div>
+    </div>
+</footer>
 </template>
+
 <script>
 export default {
     name: 'FootBar'
 }
 </script>
+
 <style lang="postcss" scoped>
-.navbar {
+
+footer {
     text-align: center;
+    border-radius: 0;
 }
-.foot-bar h5{
+footer h5{
     color: #9d9d9d;
     height: 30px;
     line-height: 30px;
 }
+
 </style>

@@ -104,7 +104,6 @@ export default {
 .register-page {
     background-color: #f8f8f8;
     height: auto;
-    position: absolute;
     bottom: 0;
     top: 50px;
     width: 100%;
