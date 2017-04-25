@@ -50,15 +50,14 @@ export default {
 				newpassword: userPassword.newPwd
 			}).then(response => {
 				if(response.ok) {
-					return Promise.resolve();
+					return true;
 				} else {
-					return Promise.reject();
+					throw new Error();
 				}
 			});
 		},
 		checkLoggedIn({commit}) {
-			return Vue.http.get('user/info')
-			.then(response => {
+			return Vue.http.get('user/info').then(response => {
 				if(response.ok && response.body) {
 					commit('updateUser', response.body);
 				}
