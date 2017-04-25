@@ -9,7 +9,7 @@
             <ul class="nav navbar-nav">
                 <li class=""><router-link to="/">Home</router-link></li>
                 <!--<li class=""><router-link to="/product">购买套餐</router-link></li>-->
-                <li class=""><router-link to="/account/manage">Management</router-link></li>
+                <li class=""><router-link to="account/manage">Management</router-link></li>
             </ul>
             <div v-if="isLoggedIn">
                 <ul class="nav navbar-nav navbar-right">
@@ -22,7 +22,6 @@
                     <li class=""><router-link to="/register">Sign up</router-link></li>
                 </ul>
             </div>
-
         </div>
     </div>
     </nav>
@@ -33,19 +32,15 @@ export default {
     name: 'NavBar',
     computed: {
         isLoggedIn() {
-            return this.$store.getters.isLoggedIn;
+            return this.$store.getters['user/isLoggedIn'];
         },
         user() {
-            return this.$store.getters.user;
+            return this.$store.getters['user/user'];
         }
     },
     methods: {
         logout() {
-            this.$http.get('user/logout').then(response => {
-                if(response.ok) {
-                    this.$store.commit('logout');
-                }
-            });
+            this.$store.dispatch('user/signOut');
         }
     }
 }

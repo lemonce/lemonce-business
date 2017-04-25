@@ -17,18 +17,10 @@ export default {
     name: 'Account',
     components: {SideBar},
     mounted() {
-        this.$http.get('user/info').then(response => {
-            if(response.ok && response.body) {
-                this.$store.commit('updateUser', response.body);
-                return;
-            } else {
-                throw new Error();
-            }
-        }).catch(err => {
+        this.$store.dispatch('user/checkLoggedIn').catch(err => {
             this.$store.commit('openModal', 'Please Sign In!');
-            this.$router.push('/');  
-        })
-        
+            this.$router.push('/'); 
+        });
     },
     data () {
         return {

@@ -12,39 +12,39 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="username">Username</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control" id="username" placeholder="6-20 characters" v-model="username" />
+                            <input type="text" class="form-control" id="username" placeholder="6-20 characters" v-model="user.username" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="password">Password</label>
                         <div class="col-md-7">
-                            <input type="password" class="form-control" id="password" placeholder="6-20 characters" v-model="password">
+                            <input type="password" class="form-control" id="password" placeholder="6-20 characters" v-model="user.password">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="confirmPassword">Confirm Password</label>
                         <div class="col-md-7">
-                            <input type="password" class="form-control" id="confirmPassword" placeholder="confirm password" v-model="confirmPassword">
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="confirm password" v-model="user.confirmPassword">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="email">Email</label>
                         <div class="col-md-7">
-                            <input type="email" class="form-control" id="email" placeholder="your email" v-model="email">
+                            <input type="email" class="form-control" id="email" placeholder="your email" v-model="user.email">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="phone">Telephone</label>
                         <div class="col-md-7">
-                            <input type="text" class="form-control" id="phone" placeholder="your telephone" v-model="phone">
+                            <input type="text" class="form-control" id="phone" placeholder="your telephone" v-model="user.phone">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="captcha">Captcha</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control captcha" id="captcha" placeholder="" v-model="captcha">
+                            <input type="text" class="form-control captcha" id="captcha" placeholder="" v-model="user.captcha">
                         </div>
-                        <div v-html="captchaSvg" class="col-md-3"></div>
+                        <div v-html="captchaSvg" class="col-md-3" @click="updateCaptcha"></div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for=""></label>
@@ -63,43 +63,39 @@ export default {
     name: 'Register',
     data() {
         return {
-            username: '',
-            password: '',
-            confirmPassword: '',
-            email: '',
-            phone: '',
-            captcha: '',
+            user: {
+                username: '',
+                password: '',
+                confirmPassword: '',
+                email: '',
+                phone: '',
+                captcha: ''
+            },
             captchaSvg: ''
         }
     },
     created() {
-        this.$http.get('user/captcha').then(response => {
-            if(response.ok) {
-                this.captchaSvg = response.body;
-            }
-        });
+        this.updateCaptcha();
     },
     methods: {
         register() {
-            if(this.password !== this.confirmPassword) {
+            if(this.user.password !== this.user.confirmPassword) {
                 this.$store.commit('openModal', 'Password not match confirmation!');
                 return;
             }
-            this.$http.post('user',{
-                username: this.username,
-                password: this.password,
-                email: this.email,
-                phone: this.phone,
-                captcha: this.captcha
-            }).then(response => {
-                if(response.ok) {
-                    this.$store.commit('openModal', 'Registe Success.');
-                    this.$store.commit('updateUser', response.body)
-                    this.$router.push('/account/manage');
-                }
+            this.$store.dispatch('user/create', this.user).then(() => {
+                this.$store.commit('openModal', 'Registe Success.');
+                this.$router.push('/account/manage');
             }).catch(err => {
                 this.$store.commit('openModal', err.body.msg);
-            })
+            });
+        },
+        updateCaptcha() {
+            this.$http.get('user/captcha').then(response => {
+                if(response.ok) {
+                    this.captchaSvg = response.body;
+                }
+            });
         }
     }
 }

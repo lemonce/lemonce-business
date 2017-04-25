@@ -42,7 +42,7 @@ exports.create = wrap(function * (req, res, next) {
 
 	const userId = yield UserModel.create(user);
 	const result = yield UserModel.findById(userId);
-	yield SummaryModel.create({userId});
+	yield SummaryModel.create({userId, version: '2'});
 	
 	req.session.user = result;
 

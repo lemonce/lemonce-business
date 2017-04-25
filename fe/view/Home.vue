@@ -39,19 +39,17 @@ export default {
     },
     computed: {
         isLoggedIn() {
-            return this.$store.getters.isLoggedIn;
+            return this.$store.getters['user/isLoggedId'];
         }
     },
     methods: {
         login() {
-            this.$http.post('user/login', {
+            this.$store
+            .dispatch('user/signIn', {
                 username: this.username,
                 password: this.password
-            }).then(response => {
-                if(response.ok) {
-                    this.$store.commit('updateUser', response.body);
-                    this.$router.push('account/manage');
-                }
+            }).then(() => {
+                this.$router.push('account/manage');
             }).catch(err => this.$store.commit('openModal', err.body.msg));
         }
     }

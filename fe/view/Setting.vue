@@ -12,13 +12,13 @@
             <div class="form-group">
                 <label class="control-label col-md-4" for="email">Email</label>
                 <div class="col-md-8">
-                    <input type="email" class="form-control" id="email" placeholder="" v-model="email">
+                    <input type="email" class="form-control" id="email" placeholder="" v-model="userInfo.email">
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-md-4" for="telephone">Telephone</label>
                 <div class="col-md-8">
-                    <input type="text" class="form-control" id="telephone" placeholder="" v-model="phone">
+                    <input type="text" class="form-control" id="telephone" placeholder="" v-model="userInfo.phone">
                 </div>
             </div>
             <div class="form-group">
@@ -39,19 +39,19 @@
             <div class="form-group">
                 <label class="control-label col-md-4" for="old_password">Old password</label>
                 <div class="col-sm-8">
-                    <input type="password" class="form-control" id="old_password" placeholder="" v-model="pwd">
+                    <input type="password" class="form-control" id="old_password" placeholder="" v-model="userPassword.pwd">
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-md-4" for="new_passwrd">New password</label>
                 <div class="col-md-8">
-                    <input type="password" class="form-control" id="new_passwrd" placeholder="" v-model="newPwd">
+                    <input type="password" class="form-control" id="new_passwrd" placeholder="" v-model="userPassword.newPwd">
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-md-4" for="confirm_password">Confirm new password</label>
                 <div class="col-md-8">
-                    <input type="password" class="form-control" id="confirm_password" placeholder="" v-model="confirmPwd">
+                    <input type="password" class="form-control" id="confirm_password" placeholder="" v-model="userPassword.confirmPwd">
                 </div>
             </div>
             <div class="form-group">
@@ -67,56 +67,50 @@
 
 export default {
     name: 'Setting',
-    mounted() {
-        this.email = this.user.email;
-        this.phone = this.user.phone;
-    },
     computed: {
         user() {
-            return this.$store.getters.user;
+            return this.$store.getters['user/user'];
         }
     },
     data() {
         return {
-            email: '',
-            phone: '',
-            pwd: '',
-            newPwd: '',
-            confirmPwd: ''
+            userInfo: {
+                email: this.$store.getters['user/user'].email,
+                phone: this.$store.getters['user/user'].phone
+            },
+            userPassword: {
+                pwd: '',
+                newPwd: '',
+                confirmPwd: ''
+            }
         }
     },
     methods: {
         resetInfo() {
-            this.email = this.user.email;
-            this.phone = this.user.phone;
+            this.userInfo.email = this.user.email;
+            this.userInfo.phone = this.user.phone;
         },
         submitInfo() {
-            this.$http.put(`user/${this.user.userId}`, {
-                email: this.email,
-                phone: this.phone
-            }).then(response => {
-                if(response.ok) {
-                    this.$store.commit('openModal', 'Success!');
-                    this.$store.commit('updateUser', response.body);
-                }
+            this.$store.dispatch('user/update', this.userInfo)
+            .then(() => {
+                this.$store.commit('openModal', 'Success!');
             });
         },
         changePassword() {
-            if(this.newPwd !== this.confirmPwd) {
-                this.$store.commit('openModal', 'Password not match confirmation.')
+            if(this.userPassword.newPwd !== this.userPassword.confirmPwd) {
+				this.$store.commit('openModal', 'Password not match confirmation.');
                 return;
-            }
-            this.$http.patch('user/changepwd', {
-                password: this.pwd,
-                newpassword: this.newPwd
-            }).then(response => {
-                if(response.ok) {
-                    this.$store.commit('openModal', 'Change Password Success.');
-                    this.pwd = '';
-                    this.newPwd = '';
-                    this.confirmPwd = '';
-                }
+			}
+            this.$store.dispatch('user/changePassword', this.userPassword)
+            .then(() => {
+                this.$store.commit('openModal', 'Change Password Success.');
+                this.clearPasswordInput();
             }).catch(err => this.$store.commit('openModal', err.body.msg));
+        },
+        clearPasswordInput() {
+            this.userPassword.pwd = '';
+            this.userPassword.newPwd = '';
+            this.userPassword.confirmPwd = '';
         }
     },
     filters: {

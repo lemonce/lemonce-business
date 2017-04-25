@@ -1,11 +1,3 @@
-export const isLoggedIn = state => {
-    return Boolean(state.user);
-};
-
-export const user = state => {
-    return state.user;
-};
-
 export const bindList = state => {
     return state.limit.bindList;
 };

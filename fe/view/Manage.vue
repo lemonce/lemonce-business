@@ -77,21 +77,19 @@
 export default {
     name: 'Product',
     mounted() {
-        this.updateLimit();
+        this.$store.dispatch('limitation/updateState');
     },
     data() {
         return {
-            bindIndex: '',
             bindMachineCode: ''
         }
     },
     computed: {
         bindList() {
-            return this.$store.getters.bindList;
+            return this.$store.getters['limitation/bindList'];
         },
         limitInfo() {
-            console.log(this.$store.getters.limitInfo);
-            return this.$store.getters.limitInfo;
+            return this.$store.getters['limitation/limitInfo'];
         },
         unbindCount() {
             return this.limitInfo.limitCount - this.limitInfo.bindCount;
@@ -99,52 +97,21 @@ export default {
     },
     methods: {
         bindLimit() {
-            const bindDate = this.getDate();
-            this.$http.post(`limit/bind`, {
-                machineCode: this.bindMachineCode
-            }).then(response => {
-                if(response.ok) {
-                    this.$store.commit('openModal', 'Bind Success!');
-                    this.updateLimit();
-                    this.clearBindInfo();
-                }
+            this.$store.dispatch('limitation/bind', this.bindMachineCode)
+            .then(() => {
+                this.clearBindInfo();
+                this.$store.commit('openModal', 'Bind Success');
             }).catch(err => this.$store.commit('openModal', err.body.msg));
         },
         clearBindInfo() {
-            this.bindIndex = '',
-            this.bindVersion = '',
             this.bindMachineCode = ''
         },
         unbindLimit(index) {
             const licenseId = this.bindList[index].id;
-            this.$http.delete(`limit/bind/${licenseId}`).then(response => {
-                if(response.ok) {
-                    this.$store.commit('openModal', 'Success!');
-                    this.updateLimit();
-                }
+            this.$store.dispatch('limitation/unbind', licenseId)
+            .then(() => {
+                this.$store.commit('openModal', 'Success!');
             }).catch(err => this.$store.commit('openModal', err.body.msg));
-        },
-        chooseLimit(index) {
-            const limit = this.bindList[index];
-            if(limit.machineCode) return;
-            this.bindIndex = index+1;
-        },
-        getDate() {
-            const curDate = new Date();
-            curDate.setHours(curDate.getHours() + 8);
-            return curDate.toISOString().slice(0, 19).replace('T', ' ');
-        },
-        updateLimit() {
-            this.$http.get('limit/summary').then(response => {
-                if(response.ok) {
-                    this.$store.commit('updateLimitInfo', response.body);
-                }
-            });
-            this.$http.get('limit/bind').then(response => {
-                if(response.ok) {
-                    this.$store.commit('updateBindList', response.body);
-                }
-            });
         }
     },
     filters: {
