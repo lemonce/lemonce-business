@@ -12,9 +12,10 @@ router.get('/:type/:value/existence', User.isExisted);
 
 router.get('/info', interceptor.requireLogin, User.info);
 router.get('/captcha', User.captcha);
-router.post('/add', User.create);
-router.post('/update/:userId',interceptor.requireLogin, User.update);
-router.post('/changepwd',interceptor.requireLogin, User.changePassword);
+
+router.post('/', User.create);
+router.put('/:userId',interceptor.requireLogin, User.update);
+router.patch('/changepwd',interceptor.requireLogin, User.changePassword);
 
 router.options('*', function (req, res) {
 	res.status(200).json();

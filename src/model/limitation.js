@@ -9,11 +9,11 @@ const joinUpdateSet = map.joinUpdateSet;
 const joinInsertSet = map.joinInsertSet;
 
 const BaseColumnList = [
-	'LIMIT_ID', 'USER_ID', 'LIMIT_CNT', 'VERSION'
+	'LIMIT_ID', 'USER_ID', 'PURCHASE_DATE', 'LIMIT_COUNT', 'VERSION'
 ];
 
 const BaseWriteList = [
-	'USER_ID', 'LIMIT_CNT', 'VERSION'
+	'USER_ID', 'PURCHASE_DATE', 'LIMIT_COUNT', 'VERSION'
 ];
 const LimitationModel = {
 
@@ -29,7 +29,9 @@ const LimitationModel = {
 
 		return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE}
 				WHERE USER_ID = ${userId}`)
-			.then(rows => toProp(rows[0]));
+			.then(function (rows) {
+				return rows.map(toProp);
+			});
 	},
 	updateById: function (limitId, limitation) {
 		const updateQuery = joinUpdateSet(limitation, BaseWriteList);
@@ -41,19 +43,7 @@ const LimitationModel = {
 		const insertQuery = joinInsertSet(limitation, BaseWriteList);
 
 		return db.q(`insert into ${LIMITATION_TABLE}${insertQuery}`);
-	},
-	updateLimitCntByUser: function (userId, value) {
-		return db.q(`UPDATE ${LIMITATION_TABLE} SET LIMIT_CNT = LIMIT_CNT + ${value}
-                    WHERE USER_ID = ${userId}`);
-    },
-    existUnbindLimit: function (userId, mask) {
-        const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);
-        return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE} WHERE USER_ID = ${userId}`)
-            .then(rows => {
-                const limit = toProp(rows[0]);
-                return limit && limit.bindCnt > limit.limitCnt;
-            });
-    }
+	}
 };
 
 module.exports = LimitationModel;

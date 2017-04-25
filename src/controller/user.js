@@ -3,7 +3,7 @@ const createError = require('http-errors');
 const wrap = require('co-express');
 const svgCaptcha = require('svg-captcha');
 const UserModel = require('../model/user');
-const LimitModel = require('../model/limitation');
+const SummaryModel = require('../model/summary');
 
 
 exports.login = wrap(function * (req, res, next) {
@@ -15,7 +15,7 @@ exports.login = wrap(function * (req, res, next) {
 
 	const user = yield UserModel.search(username, pw);
 	if (user === undefined) {
-		return next(createError(404, 'Incorrect username or password.'));
+		return next(createError(404, 'Invalid username or password.'));
 	}
 
 	req.session.user = user;
@@ -42,7 +42,7 @@ exports.create = wrap(function * (req, res, next) {
 
 	const userId = yield UserModel.create(user);
 	const result = yield UserModel.findById(userId);
-	yield LimitModel.create({userId});
+	yield SummaryModel.create({userId});
 	
 	req.session.user = result;
 

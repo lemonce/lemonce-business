@@ -16,7 +16,7 @@
                                     <input type="text" class="form-control" id="machine_code" placeholder="" v-model="bindMachineCode">
                                 </div>
                                 <div class="col-sm-4 col-xs-4">
-                                    <button type="submit" class="btn btn-fill" @click="bindLimit">Bind</button>
+                                    <input type="button" class="btn btn-fill" @click="bindLimit" value="Bind">
                                 </div>
                             </div>
                         </form>
@@ -27,9 +27,9 @@
                 <div class="panel-body">
                     <h3>Product</h3>
                     <div class="panel-label"><label for="">Version:</label> {{limitInfo.version}}</div>
-                    <div class="panel-label"><label for="">Total:</label> {{limitInfo.limitCnt}}</div>
-                    <div class="panel-label"><label for="">Binded:</label> {{limitInfo.bindCnt}}</div>
-                    <div class="panel-label"><label for="">Unbinded:</label> {{unbindCnt}}</div>
+                    <div class="panel-label"><label for="">Total:</label> {{limitInfo.limitCount}}</div>
+                    <div class="panel-label"><label for="">Binded:</label> {{limitInfo.bindCount}}</div>
+                    <div class="panel-label"><label for="">Unbinded:</label> {{unbindCount}}</div>
                 </div>
             </div>
         </div>
@@ -90,10 +90,11 @@ export default {
             return this.$store.getters.bindList;
         },
         limitInfo() {
+            console.log(this.$store.getters.limitInfo);
             return this.$store.getters.limitInfo;
         },
-        unbindCnt() {
-            return this.limitInfo.limitCnt - this.limitInfo.bindCnt;
+        unbindCount() {
+            return this.limitInfo.limitCount - this.limitInfo.bindCount;
         }
     },
     methods: {
@@ -116,7 +117,7 @@ export default {
         },
         unbindLimit(index) {
             const licenseId = this.bindList[index].id;
-            this.$http.get(`limit/unbind/${licenseId}`).then(response => {
+            this.$http.delete(`limit/bind/${licenseId}`).then(response => {
                 if(response.ok) {
                     this.$store.commit('openModal', 'Success!');
                     this.updateLimit();
@@ -134,12 +135,12 @@ export default {
             return curDate.toISOString().slice(0, 19).replace('T', ' ');
         },
         updateLimit() {
-            this.$http.get('limit/info').then(response => {
+            this.$http.get('limit/summary').then(response => {
                 if(response.ok) {
                     this.$store.commit('updateLimitInfo', response.body);
                 }
             });
-            this.$http.get('limit/list').then(response => {
+            this.$http.get('limit/bind').then(response => {
                 if(response.ok) {
                     this.$store.commit('updateBindList', response.body);
                 }

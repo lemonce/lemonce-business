@@ -40,16 +40,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-3" for="phone">Captcha</label>
+                        <label class="control-label col-md-3" for="captcha">Captcha</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control captcha" placeholder="" v-model="captcha">
+                            <input type="text" class="form-control captcha" id="captcha" placeholder="" v-model="captcha">
                         </div>
                         <div v-html="captchaSvg" class="col-md-3"></div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-md-3" for=""></label>
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-fill" @click="register">Register</button>
+                            <input type="button" class="btn btn-fill" @click="register" value="Register">
                         </div>
                     </div>
                 </form>
@@ -85,7 +85,7 @@ export default {
                 this.$store.commit('openModal', 'Password not match confirmation!');
                 return;
             }
-            this.$http.post('user/add',{
+            this.$http.post('user',{
                 username: this.username,
                 password: this.password,
                 email: this.email,
@@ -144,7 +144,7 @@ form input {
     border-radius: 0;
     border: 1px solid #71c3c3;
 }
-form button {
+form .btn {
     width: 100%;
     border-radius: 0;
     border: 2px solid white;

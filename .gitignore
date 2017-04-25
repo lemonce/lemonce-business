@@ -44,3 +44,4 @@ fe/node_modules
 fe/dist
 .vscode
 sessions
+dist

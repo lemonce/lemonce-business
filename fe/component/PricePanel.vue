@@ -8,7 +8,7 @@
                 <h1>￥{{price}}</h1>
                 <i>数量: {{number}}</i>
                 <br>
-                <button class="btn btn-fill" @click="buyProduct(version, number)">立即购买</button>
+                <input type="button" class="btn btn-fill" @click="buyProduct(version, number)" value="立即购买">
             </div>
         </div>
     </div>
@@ -28,7 +28,6 @@ export default {
     },
     methods: {
         buyProduct(version, number) {
-            console.log(this.user);
             if(!this.user) {
                 //alert login
                 this.$store.commit('openModal', 'Please Sign In!');

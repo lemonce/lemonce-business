@@ -49,7 +49,7 @@ const LicenseModel = {
         licenseId = db.escape(licenseId);
         return db.q(`DELETE FROM ${LICENSE_TABLE} WHERE LICENSE_ID = ${licenseId}`);
     },
-    findCnt: function (type, value) {
+    findCount: function (type, value) {
         const TYPE = toSnake(type);
         const VALUE = db.escape(value);
         return db.q(`SELECT COUNT(1) FROM ${LICENSE_TABLE} 

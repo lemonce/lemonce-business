@@ -18,7 +18,7 @@
                                 <input type="password" class="form-control" placeholder="Password" v-model="password">
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-fill" @click="login">Sign in</button>
+                                <input type="button" class="btn btn-fill" @click="login" value="Sign in">
                             </div>
                         </form>
                     </div>
@@ -50,7 +50,7 @@ export default {
             }).then(response => {
                 if(response.ok) {
                     this.$store.commit('updateUser', response.body);
-                    this.$router.push('/account/manage');
+                    this.$router.push('account/manage');
                 }
             }).catch(err => this.$store.commit('openModal', err.body.msg));
         }
@@ -58,7 +58,6 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
-
 .home {
     background-color: #f8f8f8;
     height: auto;
@@ -101,7 +100,7 @@ export default {
 .login .captcha {
     width: 50%;
 }
-.login button {
+.login .btn {
     width: 100%;
     border-radius: 0;
     border: 2px solid white;

@@ -28,8 +28,8 @@
             <div class="form-group">
                 <label class="control-label col-md-4" for="telephone"></label>
                 <div class="col-md-8">
-                    <button type="submit" class="btn btn-fill" @click="submitInfo">Submit</button>
-                    <button type="submit" class="btn btn-outline" @click="resetInfo">Reset</button>
+                    <input type="button" class="btn btn-fill" @click="submitInfo" value="Submit">
+                    <input type="button" class="btn btn-outline" @click="resetInfo" value="Reset">
                 </div>
             </div>
         </form>
@@ -57,7 +57,7 @@
             <div class="form-group">
                 <label class="control-label col-md-4" for="telephone"></label>
                 <div class="col-md-8">
-                    <button type="submit" class="btn btn-fill" @click="changePassword">Submit</button>
+                    <input type="button" class="btn btn-fill" @click="changePassword" value="Submit">
                 </div>
             </div>
         </form>
@@ -91,7 +91,7 @@ export default {
             this.phone = this.user.phone;
         },
         submitInfo() {
-            this.$http.post(`user/update/${this.user.userId}`, {
+            this.$http.put(`user/${this.user.userId}`, {
                 email: this.email,
                 phone: this.phone
             }).then(response => {
@@ -106,7 +106,7 @@ export default {
                 this.$store.commit('openModal', 'Password not match confirmation.')
                 return;
             }
-            this.$http.post('user/changepwd', {
+            this.$http.patch('user/changepwd', {
                 password: this.pwd,
                 newpassword: this.newPwd
             }).then(response => {
@@ -134,7 +134,7 @@ export default {
     border-radius: 0;
     width: 25rem;
 }
-.account-setting button {
+.account-setting .btn {
     border-radius: 0;
     margin-right: 2rem;
     width: 7rem;
