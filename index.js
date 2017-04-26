@@ -15,29 +15,29 @@ const serialize = require('serialize-javascript');
 const app = express();
 const httpServer = http.createServer(app);
 
-//将html文件切割为头尾两部分,生成文件的时进行拼接
-const html = (() => {
+// 读取模板html
+const layout = (() => {
 	const template = fs.readFileSync(path.resolve('./index.html'), 'utf-8');
-	const i = template.indexOf('{{ APP }}');
-    //如果是开发调试状态,css会直接插入页面中,而不是应用文件
-	const style = isProd ? '<link rel="stylesheet" href="/dist/styles.css">' : '';
-	return {
-		head: template.slice(0, i).replace('{{ STYLE }}', style),
-		tail: template.slice(i + '{{ APP }}'.length)
-	};
+	return template;
 })();
 
 let renderer;
 if (isProd) {
-	require('./prod.config');
+	loadConfig(require('./prod.config'));
 	const bundlePath = path.resolve('./dist/server-bundle.js');
 	renderer = createBundleRenderer(fs.readFileSync(bundlePath, 'utf-8'));
 } else {
-	require('./dev.config');
+	loadConfig(require('./dev.config'));
     // 如果是开发环境,bundle会在改变之后重新回调生成
 	require('./config/setup-dev-server')(app, bundle => {
 		renderer = createBundleRenderer(bundle);
 	});
+}
+
+function loadConfig(config) {
+	for(let key in config) {
+		process.env[key] = config[key];
+	}
 }
 
 
@@ -54,30 +54,22 @@ app.get('/', (req, res) => {
 	if (!renderer) {
 		return res.end('waiting for compilation... refresh in a moment.');
 	}
-
 	const context = {};
-	const renderStream = renderer.renderToStream(context);
-
-	let firstChunk = true;
-	res.write(html.head);
-
-	renderStream.on('data', chunk => {
-		if (firstChunk) {
-			if (context.initialState) {
-				res.write(
-                    `<script>window.__INITIAL_STATE__=${
-						serialize(context.initialState, {isJSON: true})
-                        }</script>`
-				);
+	renderer.renderToString(
+		context,
+		function (err, html) {
+			if(err) {
+				console.log(err);
+				return res.status(500).send('Server Error');
 			}
-			firstChunk = false;
+			res.write(
+				`<script>window.__INITIAL_STATE__=${
+					serialize(context.initialState, {isJSON: true})
+					}</script>`
+			);
+			res.end(layout.replace('<div id="app"></div>', html));
 		}
-		res.write(chunk);
-	});
-
-	renderStream.on('end', () => {
-		res.end(html.tail);
-	});
+	);
 });
 
 httpServer.listen(app.get('port'), function (err) {
@@ -90,21 +82,21 @@ httpServer.listen(app.get('port'), function (err) {
 /**
  * https server
  */
-// try {
-// 	const options = {
-// 		key: fs.readFileSync('./cert/private.pem'),
-// 		cert: fs.readFileSync('./cert/file.crt')
-// 	};
-// 	const httpsServer = https.createServer(options, app);
-// 	httpsServer.listen(app.get('sslport'), function (err) {
-// 		if (err) {
-// 			throw err;
-// 		}
+try {
+	const options = {
+		key: fs.readFileSync(process.env.KEY),
+		cert: fs.readFileSync(process.env.CERTIFICATE)
+	};
+	const httpsServer = https.createServer(options, app);
+	httpsServer.listen(app.get('sslport'), function (err) {
+		if (err) {
+			throw err;
+		}
 
-// 		console.log('Server is running on port: ' + app.get('sslport'));
-// 	});
-// } catch (err) {
-// 	console.log(err);
-// }
+		console.log('Server is running on port: ' + app.get('sslport'));
+	});
+} catch (err) {
+	console.log(err);
+}
 
 module.exports = app;

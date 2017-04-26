@@ -31,7 +31,11 @@ module.exports = function (app) {
 		secret: 't;{~JY5FLum4LgJ`%BO+us9=3Pwo&i#I,?gD$pUL',
 		resave: false,
 		saveUninitialized: true,
-		store: new FileStore({ttl: 60 * 60 * 24, retries: 1}),
+		store: new FileStore({
+			ttl: 60 * 60 * 24, 
+			retries: 1, 
+			path: process.env.SESSION_STORE
+		}),
 		cookie: {httpOnly: true}
 	}));
 	app.use(routes);

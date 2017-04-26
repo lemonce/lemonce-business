@@ -53,7 +53,7 @@ CREATE TABLE `biz_limitation` (
   `PURCHASE_ID` int(11) DEFAULT '0',
   `ACTIVED` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`LIMITATION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,6 +115,30 @@ INSERT INTO `biz_notification_type` VALUES ('orderNotification','Sent when a val
 UNLOCK TABLES;
 
 --
+-- Table structure for table `biz_product`
+--
+
+DROP TABLE IF EXISTS `biz_product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `biz_product` (
+  `PRODUCT_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `QUANTITY` int(11) DEFAULT NULL,
+  `PRICE` float DEFAULT NULL,
+  PRIMARY KEY (`PRODUCT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `biz_product`
+--
+
+LOCK TABLES `biz_product` WRITE;
+/*!40000 ALTER TABLE `biz_product` DISABLE KEYS */;
+/*!40000 ALTER TABLE `biz_product` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `biz_purchase`
 --
 
@@ -124,6 +148,7 @@ DROP TABLE IF EXISTS `biz_purchase`;
 CREATE TABLE `biz_purchase` (
   `PURCHASE_ID` varchar(100) NOT NULL,
   `EMAIL` varchar(255) NOT NULL,
+  `PRODUCT_ID` int(11) DEFAULT NULL,
   `PURCHASE_TIME` datetime DEFAULT NULL,
   `PURCHASE_COMPLETE_TIME` datetime DEFAULT NULL,
   `PURCHASE_STATUS` varchar(45) DEFAULT NULL,
@@ -159,7 +184,7 @@ CREATE TABLE `biz_user` (
   `PHONE` varchar(45) DEFAULT NULL,
   `REGISTER_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`USER_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,8 +231,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-26 19:43:01
-
+-- Dump completed on 2017-04-27  1:33:54
 -- TRIGGER
 
 delimiter $
@@ -238,15 +262,15 @@ create trigger updateUserSummary
 after update on biz_limitation
 for each row begin
     if new.ACTIVED != old.ACTIVED then
-		if new.ACTIVED = 1 then
-			update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER+new.INCREMENT WHERE USER_ID = new.USER_ID;
-        else
-			update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER-new.INCREMENT WHERE USER_ID = new.USER_ID;
-        end if;
+		  if new.ACTIVED = 1 then
+			  update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER+new.INCREMENT WHERE USER_ID = new.USER_ID;
+      else
+			  update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER-new.INCREMENT WHERE USER_ID = new.USER_ID;
+      end if;
 	else 
 		if new.INCREMENT != old.INCREMENT then
-		update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER+(new.INCREMENT-old.INCREMENT) WHERE USER_ID = new.USER_ID;
-        end if;
+		  update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER+(new.INCREMENT-old.INCREMENT) WHERE USER_ID = new.USER_ID;
     end if;
+  end if;
 end $
 delimiter ;
