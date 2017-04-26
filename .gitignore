@@ -43,4 +43,4 @@ jspm_packages
 .vscode
 sessions
 dist
-.prod.config.js
+prod.config.js

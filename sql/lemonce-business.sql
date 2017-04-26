@@ -53,7 +53,7 @@ CREATE TABLE `biz_limitation` (
   `PURCHASE_ID` int(11) DEFAULT '0',
   `ACTIVED` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`LIMITATION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,7 +193,7 @@ CREATE TABLE `biz_user_summary` (
 
 LOCK TABLES `biz_user_summary` WRITE;
 /*!40000 ALTER TABLE `biz_user_summary` DISABLE KEYS */;
-INSERT INTO `biz_user_summary` VALUES (36,0,'2');
+INSERT INTO `biz_user_summary` VALUES (0,0,'2');
 /*!40000 ALTER TABLE `biz_user_summary` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -206,4 +206,47 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-26 17:29:27
+-- Dump completed on 2017-04-26 19:43:01
+
+-- TRIGGER
+
+delimiter $
+drop trigger if exists increaseUserSummary $
+create trigger increaseUserSummary
+after insert on biz_limitation
+for each row begin
+	if new.ACTIVED=1 then
+		update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER+new.INCREMENT WHERE USER_ID = new.USER_ID;
+	end if;
+end $
+
+drop trigger if exists decreaseUserSummary $
+create trigger decreaseUserSummary
+after delete on biz_limitation
+for each row begin
+	update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER-old.INCREMENT WHERE USER_ID = old.USER_ID;
+end $
+
+drop trigger if exists createSummary $
+create trigger createSummary after insert on biz_user
+for each row begin
+	insert into biz_user_summary(USER_ID) values(new.USER_ID);
+end $
+
+drop trigger if exists updateUserSummary $
+create trigger updateUserSummary
+after update on biz_limitation
+for each row begin
+    if new.ACTIVED != old.ACTIVED then
+		if new.ACTIVED = 1 then
+			update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER+new.INCREMENT WHERE USER_ID = new.USER_ID;
+        else
+			update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER-new.INCREMENT WHERE USER_ID = new.USER_ID;
+        end if;
+	else 
+		if new.INCREMENT != old.INCREMENT then
+		update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER+(new.INCREMENT-old.INCREMENT) WHERE USER_ID = new.USER_ID;
+        end if;
+    end if;
+end $
+delimiter ;
