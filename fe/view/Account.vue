@@ -26,7 +26,7 @@ export default {
             }
         }).catch(err => {
             this.$store.commit('openModal', 'Please Sign In!');
-            this.$router.push('/');  
+            this.$router.push('/');
         })
         
     },

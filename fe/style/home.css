@@ -1,0 +1,55 @@
+.common-background {
+    background-color: #f8f8f8;
+    height: auto;
+    position: absolute;
+    bottom: 0;
+    top: 50px;
+    width: 100%;
+}
+.common-background .container {
+    padding-top: 60px;
+    width: 480px;
+    height: 350px;
+    margin: 0 auto;
+}
+.common-background .container .panel {
+    padding: 14px 30px;
+    border-radius: 4px;
+    border: 1px solid #E3E9ED;
+}
+.common-background .container .panel-header {
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+.common-background .container .panel-pre{
+    float: right;
+}
+.panel-pre a {
+    color: #4eb4b4;
+    cursor: pointer;
+}
+.container form {
+    padding: 0 60px;
+}
+.container input {
+    height: 40px;
+    margin: 0 0 1rem;
+    border-radius: 0;
+    border: 1px solid #71c3c3;
+}
+.container .captcha {
+    width: 50%;
+}
+.container button {
+    width: 100%;
+    border-radius: 0;
+    border: 2px solid white;
+}
+@media (max-width: 732px) {
+    .common-background     .container{
+        width:280px;
+    }
+    .common-background .container form {
+        padding: 0;
+    }
+}
