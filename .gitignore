@@ -40,8 +40,7 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-fe/node_modules
-fe/dist
 .vscode
 sessions
 dist
+.prod.config.js

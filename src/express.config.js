@@ -1,12 +1,28 @@
 'use strict';
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const routes = require('../src/routes');
 const session = require('express-session');
 const validator = require('express-validator');
+const winston = require('winston');
 const FileStore = require('session-file-store')(session);
 
 module.exports = function (app) {
+	
+	let logOption;
+	if(process.env.NODE_ENV === 'production') {
+		logOption = {
+			stream: {
+				write: message => winston.info(message)
+			}
+		};
+		winston.handleExceptions(new winston.transports.File({
+			filename: './error.log'
+		}));
+	}
+	app.use(logger('dev', logOption));
+
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(cookieParser());

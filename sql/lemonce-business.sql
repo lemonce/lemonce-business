@@ -24,8 +24,6 @@ DROP TABLE IF EXISTS `biz_license`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `biz_license` (
   `LICENSE_ID` char(60) NOT NULL,
-  -- 记得做索引
-
   `USER_ID` int(11) NOT NULL,
   PRIMARY KEY (`LICENSE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -50,13 +48,12 @@ DROP TABLE IF EXISTS `biz_limitation`;
 CREATE TABLE `biz_limitation` (
   `LIMITATION_ID` int(11) NOT NULL AUTO_INCREMENT,
   `USER_ID` int(11) DEFAULT NULL,
-  `CREATE_TIME` datetime DEFAULT NULL,
+  `CREATE_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   `INCREMENT` int(11) DEFAULT '0',
-  `PURCHASE_ID` int(11) DEFAULT '0', -- 可以为null，来自分销渠道就填对应的purchase 来自手动的就置0
-  `ACTIVED` tinyint(1) DEFAULT '1', -- 该记录是否生效默认生效
-  -- `VERSION` varchar(45) DEFAULT NULL, 废除这个字段
+  `PURCHASE_ID` int(11) DEFAULT '0',
+  `ACTIVED` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`LIMITATION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -76,11 +73,11 @@ DROP TABLE IF EXISTS `biz_notification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `biz_notification` (
-  `NOTIFICATION_ID` int(11) NOT NULL, -- 设置自增，多个通告可能是围绕一个订单的，比如针对某个特定订单的支付、退款、打发票等 
-  `PURCHASE_ID` varchar(100) NOT NULL, -- 根据文档的推荐我放弃修改这个字段
-  `TYPE_ID` varchar(50) DEFAULT NULL, -- 注意和type表类型保持一致
-  `RAW` varchar(45) DEFAULT NULL, -- 使用json类型，注意这里太短了。如果数据库不支持使用mediumtext类型
-  PRIMARY KEY (`PURCHASE_ID`)
+  `NOTIFICATION_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'auto increment primary key for notification',
+  `PURCHASE_ID` varchar(100) NOT NULL COMMENT 'unique key for an order',
+  `TYPE_NAME` enum('orderNotification','refundDone','fraudRefundDone','chargebackLetter','chargeback','chargebackReversal','rebillingCancelled','RebillingDeactivated') DEFAULT NULL COMMENT 'type enum for notification, type description can be seen in biz_notification_type',
+  `RAW` mediumtext COMMENT 'json content for notification',
+  PRIMARY KEY (`NOTIFICATION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -101,11 +98,9 @@ DROP TABLE IF EXISTS `biz_notification_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `biz_notification_type` (
-  `TYPE_ID` int(11) NOT NULL AUTO_INCREMENT, -- 如果可以的话考虑使用 ENUM()
-  `TYPE_NAME` varchar(45) DEFAULT NULL,
-  `TYPE_DESCRIPTION` text DEFAULT NULL,
-  -- RULE 可能需要增加一个字段表示处理方式 比如 忽略、增加限额、取消限额、减少限额...需要进一步讨论
-  PRIMARY KEY (`NOTIFICATION_TYPE_ID`)
+  `TYPE_NAME` enum('orderNotification','refundDone','fraudRefundDone','chargebackLetter','chargeback','chargebackReversal','rebillingCancelled','RebillingDeactivated') NOT NULL DEFAULT 'orderNotification' COMMENT 'enum for type of notification',
+  `TYPE_DESCRIPTION` text,
+  PRIMARY KEY (`TYPE_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -115,19 +110,20 @@ CREATE TABLE `biz_notification_type` (
 
 LOCK TABLES `biz_notification_type` WRITE;
 /*!40000 ALTER TABLE `biz_notification_type` DISABLE KEYS */;
+INSERT INTO `biz_notification_type` VALUES ('orderNotification','Sent when a valid order has been placed and payment has been received.'),('refundDone','Notifies you whenever element 5 /Share-it has issued a refund.'),('fraudRefundDone','Notifies you whenever element 5 /Share-it has issued a refund to avoid a chargeback. In this case, the order was assessed as possibly fraudulent at a later time.'),('chargebackLetter','Notifies you that, to prevent chargebacks, element 5 /Share-it has provided the credit card company with details of the order upon their request.'),('chargeback','Notifies you whenever element 5 /Share-it has performed a chargeback.'),('chargebackReversal','Notifies you whenever element 5/Share-it has reversed a chargeback upon customer request.\rNotifies you whenever element 5/Share-it has reversed a chargeback upon customer request.'),('rebillingCancelled','Sent when a subscription is cancelled, indicating the reason for the cancellation (e.g. cancelled by customer or non-payment).'),('RebillingDeactivated','Sent when a subscription had to be terminated (e.g. because the product was deactivated).');
 /*!40000 ALTER TABLE `biz_notification_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
 -- Table structure for table `biz_purchase`
 --
--- 这个表的明确的业务意义是对通告的要素抽取，所以确保和notification表 1:1 对应
+
 DROP TABLE IF EXISTS `biz_purchase`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `biz_purchase` (
-  `PURCHASE_ID` varchar(100) NOT NULL, 
-  `EMAIL` varchar(255) DEFAULT NULL, -- 不能为空的约束 做一个简单的值通配约束
+  `PURCHASE_ID` varchar(100) NOT NULL,
+  `EMAIL` varchar(255) NOT NULL,
   `PURCHASE_TIME` datetime DEFAULT NULL,
   `PURCHASE_COMPLETE_TIME` datetime DEFAULT NULL,
   `PURCHASE_STATUS` varchar(45) DEFAULT NULL,
@@ -146,32 +142,6 @@ LOCK TABLES `biz_purchase` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `biz_summary`
---
-
-DROP TABLE IF EXISTS `biz_user_summary`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `biz_summary` (
-  -- `SUMMARY_ID` int(11) NOT NULL AUTO_INCREMENT, 废除这个字段
-  `USER_ID` int(11) NOT NULL,
-  `LIMITATION_NUMBER` int(11) DEFAULT '0',
-  `USED_NUMBER` int(11) DEFAULT '0', -- 由license的触发器更新
-  `VERSION` char(7) DEFAULT '2',
-  PRIMARY KEY (`SUMMARY_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `biz_summary`
---
-
-LOCK TABLES `biz_summary` WRITE;
-/*!40000 ALTER TABLE `biz_summary` DISABLE KEYS */;
-/*!40000 ALTER TABLE `biz_summary` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `biz_user`
 --
 
@@ -181,15 +151,15 @@ DROP TABLE IF EXISTS `biz_user`;
 CREATE TABLE `biz_user` (
   `USER_ID` int(11) NOT NULL AUTO_INCREMENT,
   `USERNAME` varchar(50) NOT NULL,
-  `PASSWORD` varchar(50) NOT NULL, -- 使用sha-256 或当前数据库的最高版本 改为 char
-  `SALT` CHAR(6) NOT NULL, -- 盐从node那边随机产生 \w{6} 由insert语句调用数据库加密 未来验证时也使用数据库的加密算法计算后对比
+  `PASSWORD` varchar(50) NOT NULL,
+  `SALT` char(6) NOT NULL,
   `EMAIL` varchar(255) DEFAULT NULL,
-  `EMAIL_VERIFIED` BIT(1) DEFAULT 0, -- 邮箱激活标志位
-  `EMAIL_VERIFIED_CODE` CHAR(32) DEFAULT 0, -- 根据 username email datetime 来生成 md5 特征码
+  `EMAIL_VERIFIED` bit(1) DEFAULT b'0',
+  `EMAIL_VERIFIED_CODE` char(32) DEFAULT '0',
   `PHONE` varchar(45) DEFAULT NULL,
   `REGISTER_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`USER_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +168,33 @@ CREATE TABLE `biz_user` (
 
 LOCK TABLES `biz_user` WRITE;
 /*!40000 ALTER TABLE `biz_user` DISABLE KEYS */;
+INSERT INTO `biz_user` VALUES (0,'111','111','',NULL,'\0','0',NULL,'2017-04-26 17:19:46');
 /*!40000 ALTER TABLE `biz_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `biz_user_summary`
+--
+
+DROP TABLE IF EXISTS `biz_user_summary`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `biz_user_summary` (
+  `USER_ID` int(11) NOT NULL,
+  `LIMITATION_NUMBER` int(11) DEFAULT '0' COMMENT 'will be updated by a trigger when biz_limitation changed',
+  `VERSION` char(7) DEFAULT '2',
+  PRIMARY KEY (`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `biz_user_summary`
+--
+
+LOCK TABLES `biz_user_summary` WRITE;
+/*!40000 ALTER TABLE `biz_user_summary` DISABLE KEYS */;
+INSERT INTO `biz_user_summary` VALUES (36,0,'2');
+/*!40000 ALTER TABLE `biz_user_summary` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -210,4 +206,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-25 11:45:07
+-- Dump completed on 2017-04-26 17:29:27

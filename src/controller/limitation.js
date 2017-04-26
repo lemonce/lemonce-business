@@ -11,18 +11,6 @@ exports.create = wrap(function * (req, res) {
 	const userId = req.session.user.userId;
 	const limitation = extend({userId}, req.body);
 	yield LimitationModel.create(limitation);
-
-    const summary = yield SummaryModel.findByUser(userId);
-
-    if(summary === undefined) {
-        yield SummaryModel.create({userId});
-        summary = yield SummaryModel.findByUser(userId);
-    }
-
-    yield SummaryModel.updateById(summary.limitId, {
-        limitCount: summary.limitCount + parseInt(limitation.limitCount),
-        version: limitation.version
-    })
 	res.status(200).json({});
 });
 
@@ -40,9 +28,9 @@ exports.bind = wrap(function * (req, res, next) {
 	const machineCode = req.body.machineCode;
 
 	const summary = yield SummaryModel.findByUser(userId);
-	const bindCount = yield LicenseModel.findCount('userId', userId);
+	const bindNumber = yield LicenseModel.findCount('userId', userId);
 
-	if(!summary || summary.limitCount <= bindCount) {
+	if(!summary || summary.limitationNumber <= bindNumber) {
 		return next(createError(404, 'There is no valid product limit for your account.'));
 	}
 
@@ -63,7 +51,7 @@ exports.unBind = wrap(function * (req, res, next) {
 	const licenseId = req.params.licenseId;
 
     //请求和license解除绑定,
-    const result = yield LicenseServer.delete(licenseId);
+	const result = yield LicenseServer.delete(licenseId);
 
 	if(!result.success) {
 		return next(createError(400, result.msg));
@@ -89,7 +77,7 @@ exports.getSummary = wrap(function * (req, res) {
 	const userId = req.session.user.userId;
 
 	const summary = yield SummaryModel.findByUser(userId);
-	summary.bindCount = yield LicenseModel.findCount('userId', userId);
+	summary.bindNumber = yield LicenseModel.findCount('userId', userId);
 
 	res.status(200).json(summary);
 });

@@ -3,8 +3,6 @@ const createError = require('http-errors');
 const wrap = require('co-express');
 const svgCaptcha = require('svg-captcha');
 const UserModel = require('../model/user');
-const SummaryModel = require('../model/summary');
-
 
 exports.login = wrap(function * (req, res, next) {
 	const username = req.body.username;
@@ -42,7 +40,6 @@ exports.create = wrap(function * (req, res, next) {
 
 	const userId = yield UserModel.create(user);
 	const result = yield UserModel.findById(userId);
-	yield SummaryModel.create({userId, version: '2'});
 	
 	req.session.user = result;
 

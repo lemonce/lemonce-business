@@ -4,7 +4,7 @@ const cssnext = require('postcss-cssnext');
 module.exports = {
 	devtool: '#source-map', 
 	entry: {
-		app: './fe/client-entry.js',
+		app: resolve(__dirname, '../app/client-entry.js'),
 		vendor: ['vue', 'vuex', 'vue-router', 'vue-resource']
 	},
 	output: {

@@ -32,19 +32,16 @@ if (isProd) {
 	const bundlePath = path.resolve('./dist/server-bundle.js');
 	renderer = createBundleRenderer(fs.readFileSync(bundlePath, 'utf-8'));
 } else {
+	require('./dev.config');
     //如果是开发环境,bundle会在改变之后重新回调生成
 	require('./config/setup-dev-server')(app, bundle => {
 		renderer = createBundleRenderer(bundle);
 	});
-	process.env.MYSQL_USER = 'root';
-	process.env.MYSQL_PASSWORD = '';
-	process.env.MYSQL_DATABASE = 'lemonce';
-	process.env.MYSQL_HOST = '127.0.0.1';
 }
 
 
 require('dotenv').load();
-const config = require('./config/express.config');
+const config = require('./src/express.config');
 config(app);
 
 app.set('port', process.env.PORT || 8081);

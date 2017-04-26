@@ -20,7 +20,7 @@ const LicenseModel = {
 
 	findById: function (licenseId, mask) {
 		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);
-        licenseId = db.escape(licenseId);
+		licenseId = db.escape(licenseId);
 
 		return db.q(`SELECT ${filteredColumn} FROM ${LICENSE_TABLE}
 				WHERE LICENSE_ID = ${licenseId}`)
@@ -35,7 +35,7 @@ const LicenseModel = {
 	},
 	updateById: function (licenseId, license) {
 		const updateQuery = joinUpdateSet(license, BaseWriteList);
-        licenseId = db.escape(licenseId);
+		licenseId = db.escape(licenseId);
 
 		return db.q(`update ${LICENSE_TABLE} SET ${updateQuery}
 				WHERE LICENSE_ID = ${licenseId}`);
@@ -45,17 +45,17 @@ const LicenseModel = {
 
 		return db.q(`insert into ${LICENSE_TABLE}${insertQuery}`);
 	},
-    deleteById: function (licenseId) {
-        licenseId = db.escape(licenseId);
-        return db.q(`DELETE FROM ${LICENSE_TABLE} WHERE LICENSE_ID = ${licenseId}`);
-    },
-    findCount: function (type, value) {
-        const TYPE = toSnake(type);
-        const VALUE = db.escape(value);
-        return db.q(`SELECT COUNT(1) FROM ${LICENSE_TABLE} 
+	deleteById: function (licenseId) {
+		licenseId = db.escape(licenseId);
+		return db.q(`DELETE FROM ${LICENSE_TABLE} WHERE LICENSE_ID = ${licenseId}`);
+	},
+	findCount: function (type, value) {
+		const TYPE = toSnake(type);
+		const VALUE = db.escape(value);
+		return db.q(`SELECT COUNT(1) FROM ${LICENSE_TABLE} 
                 WHERE ${TYPE} = ${VALUE}`)
             .then(rows => rows[0]['COUNT(1)']);
-    }
+	}
 };
 
 module.exports = LicenseModel;

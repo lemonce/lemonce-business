@@ -10,11 +10,13 @@ const joinUpdateSet = map.joinUpdateSet;
 const joinInsertSet = map.joinInsertSet;
 
 const BaseColumnList = [
-	'USER_ID', 'USERNAME', 'PASSWORD', 'EMAIL', 'PHONE','REGISTER_TIME'
+	'USER_ID', 'USERNAME', 'PASSWORD', 'SALT', 'EMAIL', 
+	'EMAIL_VERIFIED', 'EMAIL_VERIFIED_CODE', 'PHONE','REGISTER_TIME'
 ];
 
 const BaseWriteList = [
-	'USERNAME', 'PASSWORD', 'EMAIL', 'PHONE'
+	'USERNAME', 'PASSWORD', 'EMAIL', 
+	'EMAIL_VERIFIED', 'EMAIL_VERIFIED_CODE', 'PHONE'
 ];
 const UserModel = {
 

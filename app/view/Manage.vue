@@ -27,9 +27,9 @@
                 <div class="panel-body">
                     <h3>Product</h3>
                     <div class="panel-label"><label for="">Version:</label> {{limitInfo.version}}</div>
-                    <div class="panel-label"><label for="">Total:</label> {{limitInfo.limitCount}}</div>
-                    <div class="panel-label"><label for="">Binded:</label> {{limitInfo.bindCount}}</div>
-                    <div class="panel-label"><label for="">Unbinded:</label> {{unbindCount}}</div>
+                    <div class="panel-label"><label for="">Total:</label> {{limitInfo.limitationNumber}}</div>
+                    <div class="panel-label"><label for="">Binded:</label> {{limitInfo.bindNumber}}</div>
+                    <div class="panel-label"><label for="">Unbinded:</label> {{unbindNumber}}</div>
                 </div>
             </div>
         </div>
@@ -91,8 +91,8 @@ export default {
         limitInfo() {
             return this.$store.getters['limitation/limitInfo'];
         },
-        unbindCount() {
-            return this.limitInfo.limitCount - this.limitInfo.bindCount;
+        unbindNumber() {
+            return this.limitInfo.limitationNumber - this.limitInfo.bindNumber;
         }
     },
     methods: {

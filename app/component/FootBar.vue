@@ -15,7 +15,6 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-
 footer {
     text-align: center;
     border-radius: 0;
@@ -25,5 +24,4 @@ footer h5{
     height: 30px;
     line-height: 30px;
 }
-
 </style>

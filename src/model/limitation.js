@@ -9,19 +9,19 @@ const joinUpdateSet = map.joinUpdateSet;
 const joinInsertSet = map.joinInsertSet;
 
 const BaseColumnList = [
-	'LIMIT_ID', 'USER_ID', 'PURCHASE_DATE', 'LIMIT_COUNT', 'VERSION'
+	'LIMITATION_ID', 'USER_ID', 'CREATE_TIME', 'INCREMENT', 'PURCHASE_ID', 'ACTIVED'
 ];
 
 const BaseWriteList = [
-	'USER_ID', 'PURCHASE_DATE', 'LIMIT_COUNT', 'VERSION'
+	'USER_ID', 'INCREMENT', 'PURCHASE_ID', 'ACTIVED'
 ];
 const LimitationModel = {
 
-	findById: function (limitId, mask) {
+	findById: function (limitationId, mask) {
 		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);
 
 		return db.q(`SELECT ${filteredColumn} FROM ${LIMITATION_TABLE}
-				WHERE LIMIT_ID = ${limitId}`)
+				WHERE LIMITATION_ID = ${limitationId}`)
 			.then(rows => toProp(rows[0]));
 	},
 	findByUser: function (userId, mask) {
@@ -33,11 +33,11 @@ const LimitationModel = {
 				return rows.map(toProp);
 			});
 	},
-	updateById: function (limitId, limitation) {
+	updateById: function (limitationId, limitation) {
 		const updateQuery = joinUpdateSet(limitation, BaseWriteList);
 
 		return db.q(`update ${LIMITATION_TABLE} SET ${updateQuery}
-				WHERE LIMIT_ID = ${limitId}`);
+				WHERE LIMITATION_ID = ${limitationId}`);
 	},
 	create: function (limitation) {
 		const insertQuery = joinInsertSet(limitation, BaseWriteList);

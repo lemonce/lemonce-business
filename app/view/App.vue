@@ -16,10 +16,8 @@ export default {
 }
 </script>
 <style lang="postcss" scoped>
-
 #main {
     min-height: 500px;
     padding-bottom: 100px;
 }
-
 </style>
