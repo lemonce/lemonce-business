@@ -6,7 +6,7 @@
             <div class="form-group">
                 <label class="control-label col-md-4" for="username">Username</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" id="username" placeholder="6-12" v-model="user.username" disabled>
+                    <input type="text" class="form-control" id="username" v-model="user.username" disabled>
                 </div>
             </div>
             <div class="form-group">
@@ -67,16 +67,23 @@
 
 export default {
     name: 'Setting',
-    computed: {
-        user() {
-            return this.$store.getters['user/user'];
-        }
+    mounted() {
+        this.$store.dispatch('user/checkLoggedIn')
+        .then(() => {
+            this.user = this.$store.getters['user/user'];
+            this.userInfo.email = this.user.email;
+            this.userInfo.phone = this.user.phone;
+        }).catch(err => {
+            this.$store.commit('openModal', 'Please Sign In!');
+            this.$router.push('/'); 
+        });
     },
     data() {
         return {
+            user: {},
             userInfo: {
-                email: this.$store.getters['user/user'].email,
-                phone: this.$store.getters['user/user'].phone
+                email: '',
+                phone: ''
             },
             userPassword: {
                 pwd: '',
