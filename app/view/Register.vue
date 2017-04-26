@@ -75,6 +75,9 @@ export default {
         }
     },
     created() {
+        if(this.$store.getters['user/isLoggedIn']) {
+            this.$router.push('/account/manage');
+        }
         this.updateCaptcha();
     },
     methods: {

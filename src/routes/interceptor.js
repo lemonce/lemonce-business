@@ -22,23 +22,6 @@ exports.requireLogin = function (req, res, next) {
 };
 
 /**
- * captcha validation for login & registration
- */
-exports.validCaptcha = function (req, res, next) {
-	const captcha = req.query.captcha;
-
-	if ((!captcha || captcha.toLowerCase() !== req.session.captcha) &&
-		(process.env.NODE_ENV !== 'development' || captcha === '!!!!')) {
-		delete req.session.captcha;
-
-		return next(createError(400, '验证码错误'));
-	}
-
-	return next();
-};
-
-
-/**
  * generate a query checker
  */
 exports.check = function (kw) {

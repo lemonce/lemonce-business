@@ -39,7 +39,7 @@ const UserModel = {
 		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, 'password');
 
 		return db.q(`SELECT ${filteredColumn} FROM ${USER_TABLE}
-				WHERE USERNAME = ${username} and PASSWORD = ${password}`)
+				WHERE (USERNAME = ${username} or EMAIL = ${username}) and PASSWORD = ${password}`)
 			.then(function (rows) {
 				return toProp(rows[0]);
 			});
@@ -75,6 +75,10 @@ const UserModel = {
 				options: [{min: 6, max: 30}]
 			},
 			errorMessage: 'invalid password'
+		},
+		email: {
+			isEmail: true,
+			errorMessage: 'invalid email'
 		}
 	}
 };

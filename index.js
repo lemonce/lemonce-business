@@ -7,7 +7,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
-// const https = require('https');
+const https = require('https');
 const express = require('express');
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer;
 const serialize = require('serialize-javascript');
@@ -29,11 +29,12 @@ const html = (() => {
 
 let renderer;
 if (isProd) {
+	require('./prod.config');
 	const bundlePath = path.resolve('./dist/server-bundle.js');
 	renderer = createBundleRenderer(fs.readFileSync(bundlePath, 'utf-8'));
 } else {
 	require('./dev.config');
-    //如果是开发环境,bundle会在改变之后重新回调生成
+    // 如果是开发环境,bundle会在改变之后重新回调生成
 	require('./config/setup-dev-server')(app, bundle => {
 		renderer = createBundleRenderer(bundle);
 	});
@@ -44,8 +45,8 @@ require('dotenv').load();
 const config = require('./src/express.config');
 config(app);
 
-app.set('port', process.env.PORT || 8081);
-app.set('sslport', process.env.SSLPORT || 443);
+app.set('port', process.env.PORT);
+app.set('sslport', process.env.SSLPORT);
 
 app.use('/dist', express.static(path.resolve('./dist')));
 
@@ -87,19 +88,12 @@ httpServer.listen(app.get('port'), function (err) {
 });
 
 /**
- * redirect the user to https
- */
-// redirectApp.get('*', (req, res) =>
-// 	res.redirect(`https://${req.headers.host}${req.url}`));
-// redirectApp.listen(80);
-
-/**
  * https server
  */
 // try {
 // 	const options = {
-// 		key: fs.readFileSync('./cert/.key'),
-// 		cert: fs.readFileSync('./cert/.pem')
+// 		key: fs.readFileSync('./cert/private.pem'),
+// 		cert: fs.readFileSync('./cert/file.crt')
 // 	};
 // 	const httpsServer = https.createServer(options, app);
 // 	httpsServer.listen(app.get('sslport'), function (err) {
@@ -110,7 +104,7 @@ httpServer.listen(app.get('port'), function (err) {
 // 		console.log('Server is running on port: ' + app.get('sslport'));
 // 	});
 // } catch (err) {
-// 	console.log('NO~~~ https');
+// 	console.log(err);
 // }
 
 module.exports = app;

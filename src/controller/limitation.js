@@ -36,7 +36,7 @@ exports.bind = wrap(function * (req, res, next) {
 
     //请求和license绑定
 	const result = yield LicenseServer.activate(
-		userId, summary.version, machineCode, 7200);
+		userId, summary.version, machineCode);
 
 	if(!result.success) {
 		return next(createError(400, result.msg));

@@ -9,12 +9,12 @@
             <ul class="nav navbar-nav">
                 <li class=""><router-link to="/">Home</router-link></li>
                 <!--<li class=""><router-link to="/product">购买套餐</router-link></li>-->
-                <li class=""><router-link to="account/manage">Management</router-link></li>
+                <li class=""><router-link to="/account/manage">Management</router-link></li>
             </ul>
             <div v-if="isLoggedIn">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class=""><a href="#" class="current-user">User: {{user.username}}</a></li>
-                    <li class=""><a href="#" @click="logout">Sign out</a></li>
+                    <li class=""><a class="current-user">User: {{user.username}}</a></li>
+                    <li class=""><a @click="logout">Sign out</a></li>
                 </ul>
             </div>
             <div v-else>
@@ -40,7 +40,9 @@ export default {
     },
     methods: {
         logout() {
-            this.$store.dispatch('user/signOut');
+            this.$store.dispatch('user/signOut').then(() => {
+                this.$router.push('/');
+            });
         }
     }
 }
@@ -52,5 +54,8 @@ export default {
     }
     .current-user {
         cursor: default;
+    }
+    a {
+        cursor: pointer;
     }
 </style>

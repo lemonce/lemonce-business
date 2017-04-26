@@ -15,7 +15,7 @@
                                 <div class="col-sm-4 col-xs-9">
                                     <input type="text" class="form-control" id="machine_code" placeholder="" v-model="bindMachineCode">
                                 </div>
-                                <div class="col-sm-4 col-xs-4">
+                                <div class="col-sm-4 col-xs-9 col-xs-offset-3 col-sm-offset-0">
                                     <input type="button" class="btn btn-fill" @click="bindLimit" value="Bind">
                                 </div>
                             </div>

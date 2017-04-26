@@ -31,6 +31,11 @@
 <script>
 export default {
     name: 'Home',
+    mounted() {
+        if(this.$store.getters['user/isLoggedIn']) {
+            this.$router.push('/account/manage');
+        }
+    },
     data() {
         return {
             username: '',
@@ -39,7 +44,7 @@ export default {
     },
     computed: {
         isLoggedIn() {
-            return this.$store.getters['user/isLoggedId'];
+            return this.$store.getters['user/isLoggedIn'];
         }
     },
     methods: {
@@ -49,7 +54,7 @@ export default {
                 username: this.username,
                 password: this.password
             }).then(() => {
-                this.$router.push('account/manage');
+                this.$router.push('/account/manage');
             }).catch(err => this.$store.commit('openModal', err.body.msg));
         }
     }
