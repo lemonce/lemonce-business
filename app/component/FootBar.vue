@@ -1,11 +1,13 @@
 <template>
-<footer class="navbar navbar-inverse">
-    <div class="container">
+<div>
+    <nav class="navbar navbar-inverse navbar-fixed-bottom">
         <div class="row">
-            <h5>©2014-2017 or-change, Co., Ltd. All rights reserved. JIN-ICP14003159-2</h5>
+            <div class="container foot-bar">
+                <h5>©2014-2017 or-change, Co., Ltd. All rights reserved. JIN-ICP14003159-2</h5>
+            </div>
         </div>
-    </div>
-</footer>
+    </nav>
+</div>
 </template>
 
 <script>
@@ -15,11 +17,10 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-footer {
+.navbar {
     text-align: center;
-    border-radius: 0;
 }
-footer h5{
+.foot-bar h5{
     color: #9d9d9d;
     height: 30px;
     line-height: 30px;
