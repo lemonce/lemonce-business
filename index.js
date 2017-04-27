@@ -82,12 +82,13 @@ httpServer.listen(app.get('port'), function (err) {
 /**
  * https server
  */
+let httpsServer;
 try {
 	const options = {
 		key: fs.readFileSync(process.env.KEY),
 		cert: fs.readFileSync(process.env.CERTIFICATE)
 	};
-	const httpsServer = https.createServer(options, app);
+	httpsServer = https.createServer(options, app);
 	httpsServer.listen(app.get('sslport'), function (err) {
 		if (err) {
 			throw err;
@@ -99,4 +100,4 @@ try {
 	console.log(err);
 }
 
-module.exports = app;
+module.exports = {app, httpServer, httpsServer};

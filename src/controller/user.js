@@ -33,9 +33,13 @@ exports.create = wrap(function * (req, res, next) {
 		return next(createError(400, 'Incorrect Captcha.'));
 	}
 
-	const exist = yield UserModel.isExist('username', user.username);
-	if(exist) {
+	const existUsername = yield UserModel.isExist('username', user.username);
+	const existEmail = yield UserModel.isExist('email', user.email);
+	if(existUsername) {
 		return next(createError(400, 'Username Already Exists.'));
+	}
+	if(existEmail) {
+		return next(createError(400, 'This email has already been registered.'));
 	}
 
 	const userId = yield UserModel.create(user);
