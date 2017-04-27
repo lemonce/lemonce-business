@@ -1,9 +1,9 @@
 <template>
-<div class="home">
+<div class="home common-background">
     <div class="container">
-            <div class="login">
+            <div class="login ">
                 <div class="panel">
-                    <div class="register"><router-link to="/register">Sign up</router-link></div>
+                    <div class="register panel-pre"><router-link to="/register">Sign up</router-link></div>
                     <div class="panel-header">
                         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         Sign in
@@ -60,60 +60,6 @@ export default {
     }
 }
 </script>
-<style lang="postcss" scoped>
-.home {
-    background-color: #f8f8f8;
-    height: auto;
-    bottom: 0;
-    top: 50px;
-    width: 100%;
-}
-.login {
-    padding-top: 60px;
-    width: 480px;
-    height: 350px;
-    margin: 0 auto;
-}
-.login .panel {
-    padding: 14px 30px;
-    border-radius: 4px;
-    border: 1px solid #E3E9ED;
-}
-.login .panel-header {
-    margin-bottom: 20px;
-    font-size: 2rem;
-}
-.login .register{
-    float: right;
-}
-.register a {
-    color: #4eb4b4;
-    cursor: pointer;
-}
-.login form {
-    padding: 0 60px;
-}
-.login input {
-    height: 40px;
-    margin: 0 0 1rem;
-    border-radius: 0;
-    border: 1px solid #71c3c3;
-}
-.login .captcha {
-    width: 50%;
-}
-.login .btn {
-    width: 100%;
-    border-radius: 0;
-    border: 2px solid white;
-}
-@media (max-width: 732px) {
-    .login{
-        width:280px;
-    }
-    .login form {
-        padding: 0;
-    }
-}
-
+<style scoped>
+    @import '../style/index.css';
 </style>

@@ -1,8 +1,8 @@
 <template>
-<div class="register-page">
+<div class="register-page common-background">
     <div class="container register-container">
         <div class="panel panel-default">
-            <div class="login">Already have account？<router-link to="/">Sign in</router-link></div>
+            <div class="login panel-pre">Already have account？<router-link to="/">Sign in</router-link></div>
             <div class="panel-header">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                 Sign up
@@ -103,57 +103,6 @@ export default {
     }
 }
 </script>
-<style lang="postcss" scoped>
-.register-page {
-    background-color: #f8f8f8;
-    height: auto;
-    bottom: 0;
-    top: 50px;
-    width: 100%;
-}
-.register-container {
-    padding-top: 60px;
-    width: 600px;
-    margin: 0 auto;
-}
-.register-container .panel-header {
-    margin-bottom: 20px;
-    font-size: 2rem;
-}
-.register-container .login{
-    float: right;
-}
-.register-container .login a {
-    color: #4eb4b4;
-    cursor: pointer;
-}
-.register-container .panel {
-    padding: 14px 30px;
-    border-radius: 4px;
-    border: 1px solid #E3E9ED;
-}
-.register-container .panel-header {
-    margin-bottom: 20px;
-    font-size: 2rem;
-}
-form input {
-    height: 40px;
-    margin: 0 0 1rem;
-    border-radius: 0;
-    border: 1px solid #71c3c3;
-}
-form .btn {
-    width: 100%;
-    border-radius: 0;
-    border: 2px solid white;
-}
-
-@media (max-width: 732px) {
-    .register-container{
-        width:280px;
-    }
-    .register-container .panel-body{
-        padding: 0;
-    }
-}
+<style scoped>
+    @import '../style/home.css';
 </style>

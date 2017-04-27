@@ -19,7 +19,7 @@ export default {
     mounted() {
         this.$store.dispatch('user/checkLoggedIn').catch(err => {
             this.$store.commit('openModal', 'Please Sign In!');
-            this.$router.push('/'); 
+            this.$router.push('/');
         });
     },
     data () {
