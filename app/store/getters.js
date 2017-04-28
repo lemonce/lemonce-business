@@ -13,3 +13,7 @@ export const modalShow = state => {
 export const modalMessage = state => {
 	return state.modalMessage;
 };
+
+export const showNavList = state => {
+	return state.showNavList;
+};

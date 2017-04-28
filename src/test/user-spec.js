@@ -15,9 +15,6 @@ describe('User::', function() {
 				password: '111'
 			}).expect(200, done);
 		});
-		it('with email & password', function(done) {
-			done();
-		});
 		it('wrong password', function(done) {
 			done();
 		});
@@ -33,18 +30,7 @@ describe('User::', function() {
 
 		});
 	});
-	describe('create user::', function() {
-		it('success', function() {
-
-		});
-		it('invalid parameter', function() {
-
-		});
-	});
 	it('get current user info', function() {
-
-	});
-	it('get captcha', function() {
 
 	});
 });

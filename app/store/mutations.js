@@ -7,3 +7,11 @@ export const openModal = (state, message) => {
 export const closeModal = state => {
 	state.modalShow = false;
 };
+
+export const toggleNavList = state => {
+	state.showNavList = !state.showNavList;
+};
+
+export const hideNavList = state => {
+	state.showNavList = false;
+};

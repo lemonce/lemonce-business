@@ -11,7 +11,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
 	state: {
 		modalShow: false,
-		modalMessage: '操作成功!'
+		modalMessage: '操作成功!',
+		showNavList: false
 	},
 	mutations,
 	getters,

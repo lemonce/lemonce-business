@@ -1,5 +1,5 @@
 <template>
-<div>
+<div @click="hideNavBar">
     <nav-bar></nav-bar>
     <router-view id="main"></router-view>
     <foot-bar></foot-bar>
@@ -12,7 +12,12 @@ import FootBar from '../component/FootBar';
 import Modal from '../component/Modal';
 export default {
     name: 'Business',
-    components: {NavBar, FootBar, Modal}
+    components: {NavBar, FootBar, Modal},
+    methods: {
+        hideNavBar() {
+            this.$store.commit('hideNavList');
+        }
+    }
 }
 </script>
 <style lang="postcss" scoped>
