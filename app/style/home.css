@@ -1,13 +1,4 @@
-.common-background {
-    background-color: #f8f8f8;
-    height: auto;
-    bottom: 0;
-    width: 100%;
-}
-.common-background .container {
-    padding-top: 60px;
-    width: 480px;
-    height: 350px;
+/*.common-background .container {
     margin: 0 auto;
 }
 .common-background .container .panel {
@@ -21,7 +12,7 @@
 }
 .common-background .container .panel-pre{
     float: right;
-}
+}*/
 .panel-pre a {
     color: #4eb4b4;
     cursor: pointer;

@@ -1,8 +1,12 @@
 <template>
 <div @click="hideNavBar">
     <nav-bar></nav-bar>
-    <router-view id="main"></router-view>
-    <foot-bar></foot-bar>
+    <div id="main-container" class="container-fluid">
+        <div class="container">
+            <router-view class="common-background"></router-view>
+        </div>
+    </div>
+    <foot-bar id="app-footer"></foot-bar>
     <modal></modal>
 </div>
 </template>
@@ -20,9 +24,14 @@ export default {
     }
 }
 </script>
-<style lang="postcss" scoped>
-#main {
+<style>
+#main-container {
     min-height: 500px;
-    padding-bottom: 100px;
+    background-color: #f8f8f8;
+}
+#app-footer {
+    border-radius: 0;
+    color: #9d9d9d;
+    text-align: center;
 }
 </style>

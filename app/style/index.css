@@ -1,12 +1,3 @@
-.section {
-    padding-top: 80px;
-    padding-bottom: 80px;
-}
-.main-bg-color {
-    background-color: #71c3c3;
-    background: linear-gradient(135deg, #6199bb, #71c3c3);
-    color: white;
-}
 .page-head {
     padding-top: 3rem;
     padding-bottom: 3rem;

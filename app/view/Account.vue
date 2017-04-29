@@ -1,14 +1,12 @@
 <template>
-    <div>
-        <div class="page-content">
-            <div class="row">
-                <div class="container">
-                    <side-bar :sidelist="sidelist"></side-bar>
-                    <router-view></router-view>
-                </div>
-            </div>
+<div class="page-content">
+    <div class="row">
+        <div class="container">
+            <side-bar :sidelist="sidelist"></side-bar>
+            <router-view></router-view>
         </div>
     </div>
+</div>
 </template>
 <script>
 import SideBar from '../component/SideBar';
