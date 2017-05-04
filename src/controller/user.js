@@ -17,6 +17,10 @@ exports.login = wrap(function * (req, res, next) {
 		return next(createError(404, 'Invalid username or password.'));
 	}
 
+	if (user.emailVerified === 0) {
+		return next(createError(404, 'Your account has not been activated. Please check the email to activate.'));
+	}
+
 	req.session.user = user;
 	res.status(200).json(user);
 });
@@ -88,12 +92,16 @@ exports.changePassword = wrap(function * (req, res, next) {
 		return next(createError(404, 'Incorrect Password.'));
 	}
 
-	user.password = newPwd;
-	yield UserModel.updateById(user.userId, user);
+	yield UserModel.changePassword(user.userId, newPwd);
 
 	res.status(200).json({});
 });
 
+exports.verifyEmail = wrap(function * (req, res) {
+	const emailVerifiedCode = req.body.eid;
+	yield UserModel.verifyEmail(emailVerifiedCode);
+	res.status(200).json({});
+});
 
 exports.captcha = function (req, res) {
 	const c = svgCaptcha.create();
@@ -116,7 +124,7 @@ function sendConfirmEmail(receiverAddress, verifiedCode) {
 		from: process.env.EMAIL_SENDER_ADDRESS,
 		to: receiverAddress,
 		subject: 'Lemonce Business Email Confirmation',
-		text: `Go to the link to confirm your email. http://localhost:8081/user/confirm?eid=${verifiedCode}`
+		text: `Go to the link to activate your account. ${process.env.SERVER_HOST}/#/email?eid=${verifiedCode}`
 	};
 
 	return new Promise((resolve, reject) => {

@@ -39,7 +39,7 @@ describe('User::', function() {
 			request.post('/user')
 			.send({
 				username: 'daisy1995',
-				password: '111111',
+				password: '11111111111111111111',
 				email: 'daisy@tju.edu.cn'
 			})
 			.expect(200, done);

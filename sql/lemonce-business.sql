@@ -53,7 +53,7 @@ CREATE TABLE `biz_limitation` (
   `PURCHASE_ID` int(11) DEFAULT '0',
   `ACTIVED` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`LIMITATION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +127,7 @@ CREATE TABLE `biz_product` (
   `INCREMENT` int(11) DEFAULT NULL,
   `PRICE` float DEFAULT NULL,
   PRIMARY KEY (`PRODUCT_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,6 +136,7 @@ CREATE TABLE `biz_product` (
 
 LOCK TABLES `biz_product` WRITE;
 /*!40000 ALTER TABLE `biz_product` DISABLE KEYS */;
+INSERT INTO `biz_product` VALUES (1,10,100);
 /*!40000 ALTER TABLE `biz_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,15 +178,15 @@ DROP TABLE IF EXISTS `biz_user`;
 CREATE TABLE `biz_user` (
   `USER_ID` int(11) NOT NULL AUTO_INCREMENT,
   `USERNAME` varchar(50) NOT NULL,
-  `PASSWORD` varchar(50) NOT NULL,
+  `PASSWORD` varchar(100) NOT NULL,
   `SALT` char(6) NOT NULL,
   `EMAIL` varchar(255) DEFAULT NULL,
   `EMAIL_VERIFIED` tinyint(1) DEFAULT '0',
-  `EMAIL_VERIFIED_CODE` char(32) DEFAULT '0',
+  `EMAIL_VERIFIED_CODE` char(40) NOT NULL,
   `PHONE` varchar(45) DEFAULT NULL,
   `REGISTER_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`USER_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -194,7 +195,7 @@ CREATE TABLE `biz_user` (
 
 LOCK TABLES `biz_user` WRITE;
 /*!40000 ALTER TABLE `biz_user` DISABLE KEYS */;
-INSERT INTO `biz_user` VALUES (0,'111','46d5f8969055c735a53a5a1f4f558ba1ab39caff','b8633f','',0,'0','','2017-04-26 17:19:46');
+INSERT INTO `biz_user` VALUES (0,'111','46d5f8969055c735a53a5a1f4f558ba1ab39caff','b8633f','',1,'0','','2017-04-26 17:19:46');
 /*!40000 ALTER TABLE `biz_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -209,7 +210,8 @@ CREATE TABLE `biz_user_summary` (
   `USER_ID` int(11) NOT NULL,
   `LIMITATION_NUMBER` int(11) DEFAULT '0' COMMENT 'will be updated by a trigger when biz_limitation changed',
   `VERSION` char(7) DEFAULT '2',
-  PRIMARY KEY (`USER_ID`)
+  PRIMARY KEY (`USER_ID`),
+  CONSTRAINT `USER_ID` FOREIGN KEY (`USER_ID`) REFERENCES `biz_user` (`USER_ID`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -232,7 +234,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-03 20:25:34
+-- Dump completed on 2017-05-04 21:34:39
 -- TRIGGER
 
 delimiter $

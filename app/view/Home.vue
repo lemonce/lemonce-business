@@ -1,6 +1,6 @@
 <template>
 <div class="common-panel container">
-    <div class="panel col-sm-4 col-sm-offset-4">
+    <div class="panel col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3">
         <div class="register panel-pre"><router-link to="/register">Sign up</router-link></div>
         <div class="panel-header">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>

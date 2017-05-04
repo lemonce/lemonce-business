@@ -26,7 +26,7 @@ exports.receive = wrap(function * (req, res) {
 		if((yield PurchaseModel.findById(purchase.purchaseId)) === undefined) {
 			yield PurchaseModel.create(purchase);
 		} else {
-			yield PurchaseModel.update(purchase.purchaseId, purchase);
+			yield PurchaseModel.updateById(purchase.purchaseId, purchase);
 		}
 	}
 	res.status(200).json(purchase);

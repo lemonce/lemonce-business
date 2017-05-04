@@ -1,7 +1,7 @@
 <template>
-<div class="common-panel container register-container">
-    <div class="panel panel-default col-sm-6 col-sm-offset-3">
-        <div class="login panel-pre">Already have account？<router-link to="/">Sign in</router-link></div>
+<div class="common-panel container">
+    <div class="panel col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1">
+        <div class="login panel-pre hidden-xs">Already have account？<router-link to="/">Sign in</router-link></div>
         <div class="panel-header">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
             Sign up
@@ -85,7 +85,7 @@ export default {
                 return;
             }
             this.$store.dispatch('user/create', this.user).then(() => {
-                this.$store.commit('openModal', 'Registe Success.');
+                this.$store.commit('openModal', 'An email has been sent to your email address. Please use the link in email to activate your account.');
                 this.$router.push('/');
             }).catch(err => {
                 this.$store.commit('openModal', err.body.msg);

@@ -7,6 +7,7 @@ module.exports = {
 
 	// http port
 	PORT: 8081,
+	SERVER_HOST: 'http://localhost:8081',
 
 	// session store location
 	SESSION_STORE: './sessions',

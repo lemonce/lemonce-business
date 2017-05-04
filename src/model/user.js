@@ -39,8 +39,8 @@ const UserModel = {
 		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, 'password');
 
 		return db.q(`SELECT ${filteredColumn} FROM ${USER_TABLE}
-				WHERE (USERNAME = ${username} or EMAIL = ${username}) and exists(
-					select ${filteredColumn} from biz_user where password=SHA1(SHA1(${password})+SALT)
+				WHERE (USERNAME = ${username} OR EMAIL = ${username}) AND EXISTS(
+					SELECT ${filteredColumn} FROM ${USER_TABLE} WHERE PASSWORD=SHA1(SHA1(${password})+SALT)
 				)`)
 			.then(function (rows) {
 				return toProp(rows[0]);
@@ -51,19 +51,25 @@ const UserModel = {
 		value = db.escape(value);
 
 		return db.q(`SELECT count(1) from ${USER_TABLE}
-				WHERE ${TYPE} = ${value} limit 1`)
+				WHERE ${TYPE} = ${value} LIMIT 1`)
 			.then(rows => Boolean(rows[0]['count(1)']));
 	},
 	updateById: function (userId, user) {
 		const updateQuery = joinUpdateSet(user, BaseWriteList);
 
-		return db.q(`update ${USER_TABLE} SET ${updateQuery}
+		return db.q(`UPDATE ${USER_TABLE} SET ${updateQuery}
 				WHERE USER_ID = ${userId}`);
 	},
 	create: function (u) {
 		const insertQuery = joinUserInsertSet(u, BaseWriteList, 'password');
 
-		return db.q(`insert into ${USER_TABLE} ${insertQuery}`).then(rows => rows.insertId);
+		return db.q(`INSERT INTO ${USER_TABLE} ${insertQuery}`).then(rows => rows.insertId);
+	},
+	changePassword: function(userId, newPassword) {
+		return db.q(`UPDATE ${USER_TABLE} SET PASSWORD = SHA1(SHA1(${db.escape(newPassword)})+SALT) WHERE USER_ID=${userId}`);
+	},
+	verifyEmail: function(emailVerifiedCode) {
+		return db.q(`UPDATE ${USER_TABLE} SET EMAIL_VERIFIED=1 WHERE EMAIL_VERIFIED_CODE=${db.escape(emailVerifiedCode)}`);
 	},
 	bodyChecker: {
 		username: {

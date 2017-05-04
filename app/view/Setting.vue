@@ -12,7 +12,7 @@
             <div class="form-group">
                 <label class="control-label col-md-4" for="email">Email</label>
                 <div class="col-md-8">
-                    <input type="email" class="form-control" id="email" placeholder="" v-model="userInfo.email">
+                    <input type="email" class="form-control" id="email" placeholder="" v-model="userInfo.email" disabled>
                 </div>
             </div>
             <div class="form-group">

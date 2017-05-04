@@ -1,5 +1,5 @@
 import Home from './view/Home';
-import Product from './view/Product';
+import Confirm from './view/Confirm';
 import Account from './view/Account';
 import Setting from './view/Setting';
 import Manage from './view/Manage';
@@ -10,10 +10,10 @@ export default [
 		path: '/',
 		component: Home
 	},
-    // {
-    //     path: '/product',
-    //     component: Product
-    // },
+	{
+		path: '/email',
+		component: Confirm
+	},
 	{
 		path: '/register',
 		component: Register

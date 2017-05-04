@@ -7,7 +7,7 @@ describe('Testing with purchase::', function() {
 		request = supertest.agent(app);
 	});
 	describe('handle notification::', function() {
-		it.only('orderNotification', function(done) {
+		it('orderNotification', function(done) {
 			const orderNotificationJson = {
 				'e5Notification': {
 					'orderNotification': {

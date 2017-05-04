@@ -33,7 +33,7 @@ export default {
 			return Vue.http.post('user', user)
 			.then(response => {
 				if(response.ok) {
-					commit('updateUser', response.body);
+					return true;
 				}
 			});
 		},
@@ -60,6 +60,17 @@ export default {
 			return Vue.http.get('user/info').then(response => {
 				if(response.ok && response.body) {
 					commit('updateUser', response.body);
+				}
+			});
+		},
+		verifyEmail({commit}, eid) {
+			return Vue.http.patch('user/verify', {
+				eid
+			}).then(response => {
+				if(response.ok) {
+					return true;
+				} else {
+					throw new Error();
 				}
 			});
 		}

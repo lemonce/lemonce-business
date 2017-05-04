@@ -2,7 +2,7 @@
 <nav class="navbar navbar-inverse">
     <div class="container">
         <div class="row">
-            <h5>©2014-2017 or-change, Co., Ltd. All rights reserved. JIN-ICP14003159-2</h5>
+            <h5>©2014-{{currentYear}} or-change, Co., Ltd. All rights reserved. JIN-ICP14003159-2</h5>
         </div>
     </div>
 </nav>
@@ -10,6 +10,11 @@
 
 <script>
 export default {
-    name: 'FootBar'
+    name: 'FootBar',
+    computed: {
+        currentYear() {
+            return new Date().getFullYear();
+        }
+    }
 }
 </script>
