@@ -2,22 +2,22 @@ import Vue from 'vue';
 export default {
 	namespaced: true,
 	state: {
-		limit: {
+		limitation: {
 			info: null,
 			bindList: []
 		},
 	},
 	getters: {
 		bindList(state) {
-			return state.limit.bindList;
+			return state.limitation.bindList;
 		},
-		limitInfo(state) {
-			return state.limit.info;
+		limitationInfo(state) {
+			return state.limitation.info;
 		}
 	},
 	actions: {
 		bind({commit, dispatch}, machineCode) {
-			return Vue.http.post('limit/bind', {
+			return Vue.http.post('limitation/bind', {
 				machineCode
 			}).then(response => {
 				if(response.ok) {
@@ -26,7 +26,7 @@ export default {
 			});
 		},
 		unbind({commit, dispatch}, licenseId) {
-			return Vue.http.delete(`limit/bind/${licenseId}`)
+			return Vue.http.delete(`limitation/bind/${licenseId}`)
 			.then(response => {
 				if(response.ok) {
 					dispatch('updateState');
@@ -34,10 +34,10 @@ export default {
 			});
 		},
 		updateState({commit}) {
-			return Vue.http.get('limit/summary').then(response => {
+			return Vue.http.get('limitation/summary').then(response => {
 				if(response.ok) {
-					commit('updateLimitInfo', response.body);
-					return Vue.http.get('limit/bind');
+					commit('updateLimitationInfo', response.body);
+					return Vue.http.get('limitation/bind');
 				}
 			}).then(response => {
 				if(response.ok) {
@@ -48,10 +48,10 @@ export default {
 	},
 	mutations: {
 		updateBindList(state, list) {
-			state.limit.bindList = list;
+			state.limitation.bindList = list;
 		},
-		updateLimitInfo(state, info) {
-			state.limit.info = info;
+		updateLimitationInfo(state, info) {
+			state.limitation.info = info;
 		}
 	}
 };

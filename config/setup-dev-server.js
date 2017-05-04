@@ -5,7 +5,7 @@ const clientConfig = require('./webpack.client.config');
 const serverConfig = require('./webpack.server.config');
 
 // 开发调试的server-bundle
-module.exports = function setupDevServer (app, onUpdate) {
+module.exports = (app, opt) => {
 	clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app];
 	clientConfig.plugins.push(
 		new webpack.HotModuleReplacementPlugin(),
@@ -13,13 +13,23 @@ module.exports = function setupDevServer (app, onUpdate) {
 	);
 
 	const clientCompiler = webpack(clientConfig);
-	app.use(require('webpack-dev-middleware')(clientCompiler, {
+	const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
 		publicPath: clientConfig.output.publicPath,
 		stats: {
 			colors: true,
 			chunks: false
 		}
-	}));
+	});
+	app.use(devMiddleware);
+
+	clientCompiler.plugin('done', () => {
+		const fs = devMiddleware.fileSystem;
+		const filePath = path.join(clientConfig.output.path, 'index.html');
+		if (fs.existsSync(filePath)) {
+			const index = fs.readFileSync(filePath, 'utf-8');
+			opt.indexUpdated(index);
+		}
+	});
 	app.use(require('webpack-hot-middleware')(clientCompiler));
 
 	const serverCompiler = webpack(serverConfig);
@@ -31,6 +41,6 @@ module.exports = function setupDevServer (app, onUpdate) {
 		stats = stats.toJson();
 		stats.errors.forEach(err => console.error(err));
 		stats.warnings.forEach(err => console.warn(err));
-		onUpdate(mfs.readFileSync(outputPath, 'utf-8'));
+		opt.bundleUpdated(mfs.readFileSync(outputPath, 'utf-8'));
 	});
 };

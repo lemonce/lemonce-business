@@ -13,6 +13,3 @@ export default {
     name: 'FootBar'
 }
 </script>
-
-<style lang="postcss">
-</style>

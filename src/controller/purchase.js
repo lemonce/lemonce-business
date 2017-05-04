@@ -1,11 +1,9 @@
-const rp = require('request-promise');
 const wrap = require('co-express');
 const NotificationModel = require('../model/notification');
 const PurchaseModel = require('../model/purchase');
-const NOTIFICATION_RECEIVE_URL = process.env.NOTIFICATION_RECEIVE_URL;
 
 exports.receive = wrap(function * (req, res) {
-	let result = yield getNotification({});
+	let result = req.body;
 	result = result.e5Notification;
 	let notification = null, purchase = null;
 	for(let type in result) {
@@ -33,13 +31,3 @@ exports.receive = wrap(function * (req, res) {
 	}
 	res.status(200).json(purchase);
 });
-
-function getNotification(requestBody) {
-	const options = {
-		method: 'POST',
-		uri: NOTIFICATION_RECEIVE_URL,
-		body: requestBody,
-		json: true
-	};
-	return rp(options);
-}

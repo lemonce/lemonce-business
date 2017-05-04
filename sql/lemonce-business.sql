@@ -53,7 +53,7 @@ CREATE TABLE `biz_limitation` (
   `PURCHASE_ID` int(11) DEFAULT '0',
   `ACTIVED` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`LIMITATION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -75,10 +75,10 @@ DROP TABLE IF EXISTS `biz_notification`;
 CREATE TABLE `biz_notification` (
   `NOTIFICATION_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'auto increment primary key for notification',
   `PURCHASE_ID` varchar(100) NOT NULL COMMENT 'unique key for an order',
-  `TYPE_NAME` enum('orderNotification','refundDone','fraudRefundDone','chargebackLetter','chargeback','chargebackReversal','rebillingCancelled','RebillingDeactivated') DEFAULT NULL COMMENT 'type enum for notification, type description can be seen in biz_notification_type',
+  `TYPE_ID` int(11) NOT NULL COMMENT 'type enum for notification, type description can be seen in biz_notification_type',
   `RAW` mediumtext COMMENT 'json content for notification',
   PRIMARY KEY (`NOTIFICATION_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,10 +98,11 @@ DROP TABLE IF EXISTS `biz_notification_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `biz_notification_type` (
-  `TYPE_NAME` enum('orderNotification','refundDone','fraudRefundDone','chargebackLetter','chargeback','chargebackReversal','rebillingCancelled','RebillingDeactivated') NOT NULL DEFAULT 'orderNotification' COMMENT 'enum for type of notification',
-  `TYPE_DESCRIPTION` text,
-  PRIMARY KEY (`TYPE_NAME`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `TYPE_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(50) DEFAULT NULL COMMENT 'enum for type of notification',
+  `DESCRIPTION` text,
+  PRIMARY KEY (`TYPE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -110,7 +111,7 @@ CREATE TABLE `biz_notification_type` (
 
 LOCK TABLES `biz_notification_type` WRITE;
 /*!40000 ALTER TABLE `biz_notification_type` DISABLE KEYS */;
-INSERT INTO `biz_notification_type` VALUES ('orderNotification','Sent when a valid order has been placed and payment has been received.'),('refundDone','Notifies you whenever element 5 /Share-it has issued a refund.'),('fraudRefundDone','Notifies you whenever element 5 /Share-it has issued a refund to avoid a chargeback. In this case, the order was assessed as possibly fraudulent at a later time.'),('chargebackLetter','Notifies you that, to prevent chargebacks, element 5 /Share-it has provided the credit card company with details of the order upon their request.'),('chargeback','Notifies you whenever element 5 /Share-it has performed a chargeback.'),('chargebackReversal','Notifies you whenever element 5/Share-it has reversed a chargeback upon customer request.\rNotifies you whenever element 5/Share-it has reversed a chargeback upon customer request.'),('rebillingCancelled','Sent when a subscription is cancelled, indicating the reason for the cancellation (e.g. cancelled by customer or non-payment).'),('RebillingDeactivated','Sent when a subscription had to be terminated (e.g. because the product was deactivated).');
+INSERT INTO `biz_notification_type` VALUES (1,'orderNotification','Sent when a valid order has been placed and payment has been received.'),(2,'refundDone','Notifies you whenever element 5 /Share-it has issued a refund.'),(3,'fraudRefundDone','Notifies you whenever element 5 /Share-it has issued a refund to avoid a chargeback. In this case, the order was assessed as possibly fraudulent at a later time.'),(4,'chargebackLetter','Notifies you that, to prevent chargebacks, element 5 /Share-it has provided the credit card company with details of the order upon their request.'),(5,'chargeback','Notifies you whenever element 5 /Share-it has performed a chargeback.'),(6,'chargebackReversal','Notifies you whenever element 5/Share-it has reversed a chargeback upon customer request.\rNotifies you whenever element 5/Share-it has reversed a chargeback upon customer request.'),(7,'rebillingCancelled','Sent when a subscription is cancelled, indicating the reason for the cancellation (e.g. cancelled by customer or non-payment).'),(8,'RebillingDeactivated','Sent when a subscription had to be terminated (e.g. because the product was deactivated).');
 /*!40000 ALTER TABLE `biz_notification_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,7 +124,7 @@ DROP TABLE IF EXISTS `biz_product`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `biz_product` (
   `PRODUCT_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `QUANTITY` int(11) DEFAULT NULL,
+  `INCREMENT` int(11) DEFAULT NULL,
   `PRICE` float DEFAULT NULL,
   PRIMARY KEY (`PRODUCT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -179,12 +180,12 @@ CREATE TABLE `biz_user` (
   `PASSWORD` varchar(50) NOT NULL,
   `SALT` char(6) NOT NULL,
   `EMAIL` varchar(255) DEFAULT NULL,
-  `EMAIL_VERIFIED` TINYINT(1) DEFAULT '0',
+  `EMAIL_VERIFIED` tinyint(1) DEFAULT '0',
   `EMAIL_VERIFIED_CODE` char(32) DEFAULT '0',
   `PHONE` varchar(45) DEFAULT NULL,
   `REGISTER_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`USER_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,7 +194,7 @@ CREATE TABLE `biz_user` (
 
 LOCK TABLES `biz_user` WRITE;
 /*!40000 ALTER TABLE `biz_user` DISABLE KEYS */;
-INSERT INTO `biz_user` VALUES (0,'111','111','',NULL,'\0','0',NULL,'2017-04-26 17:19:46');
+INSERT INTO `biz_user` VALUES (0,'111','46d5f8969055c735a53a5a1f4f558ba1ab39caff','b8633f','',0,'0','','2017-04-26 17:19:46');
 /*!40000 ALTER TABLE `biz_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -231,7 +232,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-27  1:33:54
+-- Dump completed on 2017-05-03 20:25:34
 -- TRIGGER
 
 delimiter $
@@ -272,5 +273,18 @@ for each row begin
 		  update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER+(new.INCREMENT-old.INCREMENT) WHERE USER_ID = new.USER_ID;
     end if;
   end if;
+end $
+
+drop trigger if exists createLimitation $
+create trigger createLimitation
+after insert on biz_purchase
+for each row begin
+	if new.PURCHASE_STATUS = 'complete' then
+		insert into biz_limitation(USER_ID, INCREMENT, PURCHASE_ID) values(
+			(select USER_ID from biz_user where EMAIL = new.EMAIL),
+            (select INCREMENT from biz_product where PRODUCT_ID = new.PRODUCT_ID),
+            new.PURCHASE_ID
+        );
+    end if;
 end $
 delimiter ;

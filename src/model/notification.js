@@ -3,17 +3,18 @@ const map = require('./map');
 const db = require('./db');
 
 const NOTIFICATION_TABLE = 'biz_notification';
+const NOTIFICATION_TYPE_TABLE = 'biz_notification_type';
 const toProp = map.toProp;
 const maskColumnAndJoinKey = map.maskColumnAndJoinKey;
 const joinUpdateSet = map.joinUpdateSet;
 const joinInsertSet = map.joinInsertSet;
 
 const BaseColumnList = [
-	'NOTIFICATION_ID', 'PURCHASE_ID', 'TYPE_NAME', 'RAW'
+	'NOTIFICATION_ID', 'PURCHASE_ID', 'TYPE_ID', 'RAW'
 ];
 
 const BaseWriteList = [
-	'PURCHASE_ID', 'TYPE_NAME', 'RAW'
+	'PURCHASE_ID', 'TYPE_ID', 'RAW'
 ];
 const NotificationModel = {
 	findById: function (notificationId, mask) {
@@ -39,7 +40,8 @@ const NotificationModel = {
 				WHERE NOTIFICATION_ID = ${notificationId}`);
 	},
 	create: function (notification) {
-		const insertQuery = joinInsertSet(notification, BaseWriteList);
+		notification.typeId = `(SELECT TYPE_ID FROM ${NOTIFICATION_TYPE_TABLE} WHERE NAME = ${db.escape(notification.typeName)})`;
+		const insertQuery = joinInsertSet(notification, BaseWriteList, 'typeId');
 
 		return db.q(`insert into ${NOTIFICATION_TABLE}${insertQuery}`);
 	}

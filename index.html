@@ -4,9 +4,17 @@
     <meta charset="utf-8">
     <title>Lemonce-Business</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <% if(htmlWebpackPlugin.options.environment === 'production') { %>
+    <% for(key in htmlWebpackPlugin.files.css){ %>
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[key] %>">
+    <% } %>
+    <% } %>
   </head>
   <body>
     <div id="app"></app>
+    {{ APP }}
     <script src="/dist/client-vendor-bundle.js"></script>
     <script src="/dist/client-bundle.js"></script>
   </body>

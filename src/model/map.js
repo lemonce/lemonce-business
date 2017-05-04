@@ -114,15 +114,20 @@ exports.joinUpdateSet = function (obj, props) {
  * (EMAIL, `SCHEMAS`, LAST_TIME)
  * values ('email', 'schema', 123456)
  */
-exports.joinInsertSet = function (obj, props) {
+exports.joinInsertSet = function (obj, props, unescapedColumn = null) {
 	// should be like ['lastTime', 'login']
 	const validKeys = _.intersection(Object.keys(obj), props.map(camelize));
 
 	var values = [];
 	var escapedVal;
 	validKeys.forEach(function (key) {
-		escapedVal = escape(obj[key]);
-		values.push(escapedVal);
+		if(key === unescapedColumn) {
+			values.push(obj[key]);
+		} else {
+			escapedVal = escape(obj[key]);
+			values.push(escapedVal);
+		}
+		
 	});
 	// schema is mysql keyword
 	const keySet = '(' + validKeys.map(key => {
@@ -130,6 +135,30 @@ exports.joinInsertSet = function (obj, props) {
 	}).join(',') + ')';
 
 	return keySet + ' values (' + values.join(',') + ')';
+};
+
+
+exports.joinUserInsertSet = function (obj, props, encryptedColumn) {
+	// should be like ['lastTime', 'login']
+	const validKeys = _.intersection(Object.keys(obj), props.map(camelize));
+
+	var values = [];
+	var escapedVal;
+	validKeys.forEach(function (key) {
+		escapedVal = escape(obj[key]);
+		if(key === encryptedColumn) {
+			values.push('SHA1(SHA1(' + escapedVal + ')+salt)');
+		} else {
+			values.push(escapedVal);
+		}
+		
+	});
+	// schema is mysql keyword
+	const keySet = '(' + validKeys.map(key => {
+		return toSnake(key);
+	}).join(',') + ', SALT, EMAIL_VERIFIED_CODE)';
+
+	return keySet + ' values (' + values.join(',') + ',(select substring(MD5(RAND()),RAND()*26,6) as salt), UUID())';
 };
 
 /**

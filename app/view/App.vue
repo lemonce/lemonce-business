@@ -24,6 +24,7 @@ export default {
     }
 }
 </script>
+
 <style>
 #main-container {
     min-height: 500px;

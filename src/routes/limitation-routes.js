@@ -10,7 +10,7 @@ router.post('/', interceptor.requireLogin, Limitation.create);
 router.get('/', interceptor.requireLogin, Limitation.getList);
 
 router.get('/summary', interceptor.requireLogin, Limitation.getSummary);
-router.put('/:limitId([0-9]+)', Limitation.updateSummary);
+router.put('/:limitationId([0-9]+)', Limitation.updateSummary);
 
 router.get('/bind', interceptor.requireLogin, Limitation.getBindList);
 router.post('/bind', interceptor.requireLogin, Limitation.bind);

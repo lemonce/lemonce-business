@@ -65,7 +65,7 @@ exports.unBind = wrap(function * (req, res, next) {
 
 exports.updateSummary = wrap(function * (req, res) {
 	const limitation = req.body;
-	const summaryId = req.params.limitId;
+	const summaryId = req.params.limitationId;
 	yield SummaryModel.updateById(summaryId, limitation);
 	const newSummary = yield SummaryModel.findById(summaryId);
 

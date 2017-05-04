@@ -18,5 +18,16 @@ module.exports = {
 
 	// url for license server
 	LICENSE_SERVER: 'http://139.129.225.83:8080/license',
-	LICENSE_ACTIVATE_PERIOD: 7200
+	LICENSE_ACTIVATE_PERIOD: 7200,
+
+	// email account
+	EMAIL_SERVICE: 'QQ',
+	EMAIL_AUTH_USER: '46922547@qq.com',
+	EMAIL_AUTH_PASSWORD: 'xvxrdpjmqsrqbicd',
+	EMAIL_SENDER_ADDRESS: 'Lemonce <46922547@qq.com>',
+
+	// page info
+	PAGE_TITLE: 'Lemonce-Business',
+	PAGE_DESCRIPTION: 'aaa',
+	PAGE_KEYWORDS: 'lemonce'
 };

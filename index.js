@@ -11,26 +11,46 @@ const https = require('https');
 const express = require('express');
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer;
 const serialize = require('serialize-javascript');
+const devServer = require('./config/setup-dev-server');
 
 const app = express();
 const httpServer = http.createServer(app);
 
-// 读取模板html
-const layout = (() => {
-	const template = fs.readFileSync(path.resolve('./index.html'), 'utf-8');
-	return template;
-})();
+const parseHTML = tmpl => {
+	const placeholder = '{{ APP }}';
+	const i = tmpl.indexOf(placeholder);
+	return {
+		head: tmpl.slice(0, i),
+		tail: tmpl.slice(i + placeholder.length)
+	};
+};
+
+const parseMeta = (head) => {
+	const title = process.env.PAGE_TITLE;
+	const description = process.env.PAGE_DESCRIPTION;
+	const keywords = process.env.PAGE_KEYWORDS;
+	head = head.replace(/(<title>)(.*?)(<\/title>)/, `$1${title}$3`);
+	head = head.replace(/(<meta name=description content=")(.*?)(">)/, `$1${description}$3`);
+	head = head.replace(/(<meta name=keywords content=")(.*?)(">)/, `$1${keywords}$3`);
+	return head;
+};
 
 let renderer;
-if (isProd) {
+let indexHTML;
+
+if(isProd) {
 	loadConfig(require('./prod.config'));
-	const bundlePath = path.resolve('./dist/server-bundle.js');
-	renderer = createBundleRenderer(fs.readFileSync(bundlePath, 'utf-8'));
+	renderer = createBundleRenderer(fs.readFileSync(path.resolve('./dist/server-bundle.js'), 'utf-8'));
+	indexHTML = parseHTML(fs.readFileSync(path.resolve('./dist/index.html'), 'utf-8'));
 } else {
 	loadConfig(require('./dev.config'));
-    // 如果是开发环境,bundle会在改变之后重新回调生成
-	require('./config/setup-dev-server')(app, bundle => {
-		renderer = createBundleRenderer(bundle);
+	devServer(app, {
+		indexUpdated: index => {
+			indexHTML = parseHTML(index);
+		},
+		bundleUpdated: bundle => {
+			renderer = createBundleRenderer(bundle);
+		}
 	});
 }
 
@@ -54,22 +74,38 @@ app.get('/', (req, res) => {
 	if (!renderer) {
 		return res.end('waiting for compilation... refresh in a moment.');
 	}
+	res.setHeader('Content-Type', 'text-html');
 	const context = {};
-	renderer.renderToString(
-		context,
-		function (err, html) {
-			if(err) {
-				console.log(err);
-				return res.status(500).send('Server Error');
-			}
+	const renderStream = renderer.renderToStream(context);
+
+	renderStream.once('data', () => {
+		res.write(parseMeta(indexHTML.head));
+	});
+
+	renderStream.on('data', chunk => {
+		res.write(chunk);
+	});
+
+	renderStream.on('end', () => {
+		if(context.initialState){
 			res.write(
 				`<script>window.__INITIAL_STATE__=${
 					serialize(context.initialState, {isJSON: true})
-					}</script>`
+				}</script>`
 			);
-			res.end(layout.replace('<div id="app"></div>', html));
 		}
-	);
+
+		res.end(indexHTML.tail);
+	});
+
+	renderStream.on('error', err => {
+		if(err && err.code == '404'){
+			res.status(404).end('404, Page Not Found');
+			return;
+		}
+		res.status(500).end('500 Internal Error');
+		console.log(err);
+	});
 });
 
 httpServer.listen(app.get('port'), function (err) {

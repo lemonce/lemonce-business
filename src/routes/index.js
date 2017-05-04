@@ -3,7 +3,8 @@
 const path = require('path');
 const express = require('express');
 const userRoutes = require('./user-routes');
-const limitRoutes = require('./limitation-routes');
+const limitationRoutes = require('./limitation-routes');
+const purchaseRoutes = require('./purchase-routes');
 
 const router = new express.Router();
 const oneDay = 86400000;
@@ -13,8 +14,9 @@ const oneDay = 86400000;
 // 	path.resolve(__dirname, '../public'),
 // 	{maxage: oneDay * 3}
 // ));
-router.use('/limit', limitRoutes);
+router.use('/limitation', limitationRoutes);
 router.use('/user', userRoutes);
+router.use('/purchase', purchaseRoutes);
 // router.use('/purchase', purchaseRoutes);
 
 /**

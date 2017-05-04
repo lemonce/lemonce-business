@@ -7,7 +7,7 @@ const toProp = map.toProp;
 const toSnake = map.toSnake;
 const maskColumnAndJoinKey = map.maskColumnAndJoinKey;
 const joinUpdateSet = map.joinUpdateSet;
-const joinInsertSet = map.joinInsertSet;
+const joinUserInsertSet = map.joinUserInsertSet;
 
 const BaseColumnList = [
 	'USER_ID', 'USERNAME', 'PASSWORD', 'SALT', 'EMAIL', 
@@ -39,7 +39,9 @@ const UserModel = {
 		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, 'password');
 
 		return db.q(`SELECT ${filteredColumn} FROM ${USER_TABLE}
-				WHERE (USERNAME = ${username} or EMAIL = ${username}) and PASSWORD = ${password}`)
+				WHERE (USERNAME = ${username} or EMAIL = ${username}) and exists(
+					select ${filteredColumn} from biz_user where password=SHA1(SHA1(${password})+SALT)
+				)`)
 			.then(function (rows) {
 				return toProp(rows[0]);
 			});
@@ -59,7 +61,7 @@ const UserModel = {
 				WHERE USER_ID = ${userId}`);
 	},
 	create: function (u) {
-		const insertQuery = joinInsertSet(u, BaseWriteList);
+		const insertQuery = joinUserInsertSet(u, BaseWriteList, 'password');
 
 		return db.q(`insert into ${USER_TABLE} ${insertQuery}`).then(rows => rows.insertId);
 	},

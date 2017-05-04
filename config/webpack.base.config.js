@@ -1,11 +1,12 @@
 const {resolve} = require('path');
 const cssnext = require('postcss-cssnext');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
 	devtool: '#source-map', 
 	entry: {
 		app: resolve(__dirname, '../app/client-entry.js'),
-		vendor: ['vue', 'vuex', 'vue-router', 'vue-resource']
+		// vendor: ['vue', 'vuex', 'vue-router', 'vue-resource']
 	},
 	output: {
 		path: resolve(__dirname, '../dist'),
@@ -25,12 +26,14 @@ module.exports = {
 				// transform own css
 				test: /\.css$/,
 				exclude: /node_modules/,
-				loader: 'style-loader!css-loader!postcss-loader'
+				// loader: 'style-loader!css-loader!postcss-loader'
+				loader: ExtractTextPlugin.extract(['css-loader', 'postcss-loader'])
 			}, {
 				// do not transform vendor css
 				test: /\.css$/,
 				include: /node_modules/,
-				loader: 'style-loader!css-loader'
+				// loader: 'style-loader!css-loader'
+				loader: ExtractTextPlugin.extract(['css-loader'])
 			}, {
 				test: /\.(png|jpg|svg|gif)$/,
 				exclude: /node_modules/,

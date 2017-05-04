@@ -1,60 +1,58 @@
 <template>
-<div class="register-page common-background">
-    <div class="container register-container">
-        <div class="panel panel-default">
-            <div class="login panel-pre">Already have account？<router-link to="/">Sign in</router-link></div>
-            <div class="panel-header">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                Sign up
-            </div>
-            <div class="panel-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="username">Username</label>
-                        <div class="col-md-7">
-                            <input type="text" class="form-control" id="username" placeholder="6-20 characters" v-model="user.username" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="password">Password</label>
-                        <div class="col-md-7">
-                            <input type="password" class="form-control" id="password" placeholder="6-20 characters" v-model="user.password">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="confirmPassword">Confirm Password</label>
-                        <div class="col-md-7">
-                            <input type="password" class="form-control" id="confirmPassword" placeholder="confirm password" v-model="user.confirmPassword">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="email">Email</label>
-                        <div class="col-md-7">
-                            <input type="email" class="form-control" id="email" placeholder="your email" v-model="user.email">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="phone">Telephone</label>
-                        <div class="col-md-7">
-                            <input type="text" class="form-control" id="phone" placeholder="your telephone" v-model="user.phone">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="captcha">Captcha</label>
-                        <div class="col-md-3">
-                            <input type="text" class="form-control captcha" id="captcha" placeholder="" v-model="user.captcha">
-                        </div>
-                        <div v-html="captchaSvg" class="col-md-3" @click="updateCaptcha"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for=""></label>
-                        <div class="col-md-6">
-                            <input type="button" class="btn btn-fill" @click="register" value="Register">
-                        </div>
-                    </div>
-                </form>
-            </div>
+<div class="common-panel container register-container">
+    <div class="panel panel-default col-sm-6 col-sm-offset-3">
+        <div class="login panel-pre">Already have account？<router-link to="/">Sign in</router-link></div>
+        <div class="panel-header">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            Sign up
         </div>
+        <div class="panel-body">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-md-3" for="username">Username</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control" id="username" placeholder="6-20 characters" v-model="user.username" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3" for="password">Password</label>
+                <div class="col-md-7">
+                    <input type="password" class="form-control" id="password" placeholder="6-20 characters" v-model="user.password">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3" for="confirmPassword">Confirm Password</label>
+                <div class="col-md-7">
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="confirm password" v-model="user.confirmPassword">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3" for="email">Email</label>
+                <div class="col-md-7">
+                    <input type="email" class="form-control" id="email" placeholder="your email" v-model="user.email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3" for="phone">Telephone</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control" id="phone" placeholder="your telephone" v-model="user.phone">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3" for="captcha">Captcha</label>
+                <div class="col-md-3">
+                    <input type="text" class="form-control captcha" id="captcha" placeholder="" v-model="user.captcha">
+                </div>
+                <div v-html="captchaSvg" class="col-md-3" @click="updateCaptcha"></div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3" for=""></label>
+                <div class="col-md-6">
+                    <input type="button" class="btn btn-fill" @click="register" value="Register">
+                </div>
+            </div>
+        </form>
+    </div>
     </div>
 </div>
 </template>
@@ -88,7 +86,7 @@ export default {
             }
             this.$store.dispatch('user/create', this.user).then(() => {
                 this.$store.commit('openModal', 'Registe Success.');
-                this.$router.push('/account/manage');
+                this.$router.push('/');
             }).catch(err => {
                 this.$store.commit('openModal', err.body.msg);
             });
@@ -105,4 +103,7 @@ export default {
 </script>
 <style scoped>
     @import '../style/home.css';
+    .container form {
+        padding: 0 10px;
+    }
 </style>

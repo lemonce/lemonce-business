@@ -1,5 +1,6 @@
 'use strict';
 const createError = require('http-errors');
+const nodemailer = require('nodemailer');
 const wrap = require('co-express');
 const svgCaptcha = require('svg-captcha');
 const UserModel = require('../model/user');
@@ -44,10 +45,9 @@ exports.create = wrap(function * (req, res, next) {
 
 	const userId = yield UserModel.create(user);
 	const result = yield UserModel.findById(userId);
-	
-	req.session.user = result;
+	yield sendConfirmEmail(result.email, result.emailVerifiedCode);
 
-	res.status(200).json(result);
+	res.status(200).json({});
 });
 
 exports.logout = function (req, res) {
@@ -103,3 +103,30 @@ exports.captcha = function (req, res) {
 	res.status(200).send(c.data);
 };
 
+function sendConfirmEmail(receiverAddress, verifiedCode) {
+	const transporter = nodemailer.createTransport({
+		service: process.env.EMAIL_SERVICE,
+		auth: {
+			user: process.env.EMAIL_AUTH_USER,
+			pass: process.env.EMAIL_AUTH_PASSWORD
+		}
+	});
+
+	const mailOptions = {
+		from: process.env.EMAIL_SENDER_ADDRESS,
+		to: receiverAddress,
+		subject: 'Lemonce Business Email Confirmation',
+		text: `Go to the link to confirm your email. http://localhost:8081/user/confirm?eid=${verifiedCode}`
+	};
+
+	return new Promise((resolve, reject) => {
+		transporter.sendMail(mailOptions, err => {
+			if(err) {
+				console.error(err.stack);
+				reject(err);
+			}
+			transporter.close();
+			resolve();
+		});
+	});
+}

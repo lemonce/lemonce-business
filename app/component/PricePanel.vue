@@ -37,10 +37,10 @@ export default {
             // If pay success
             this.addLimitation(version, number);
         },
-        addLimitation(version, limitCnt) {
+        addLimitation(version, limitationCount) {
             const purchaseDate = this.getDate();
             this.$http.post(`purchase/add`, {
-                purchaseDate, version, limitCnt
+                purchaseDate, version, limitationCount
             }).then(response => {
                 if(response.ok) {
                     this.$store.commit('openModal', '购买成功!');

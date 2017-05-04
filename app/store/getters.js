@@ -1,9 +1,9 @@
 export const bindList = state => {
-	return state.limit.bindList;
+	return state.limitation.bindList;
 };
 
-export const limitInfo = state => {
-	return state.limit.info;
+export const limitationInfo = state => {
+	return state.limitation.info;
 };
 
 export const modalShow = state => {

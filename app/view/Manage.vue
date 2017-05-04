@@ -16,19 +16,19 @@
                                     <input type="text" class="form-control" id="machine_code" placeholder="" v-model="bindMachineCode">
                                 </div>
                                 <div class="col-sm-4 col-xs-9 col-xs-offset-3 col-sm-offset-0">
-                                    <input type="button" class="btn btn-fill" @click="bindLimit" value="Bind">
+                                    <input type="button" class="btn btn-fill" @click="bindLimitation" value="Bind">
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="panel panel-default product-panel col-md-3 col-sm-12" v-if="limitInfo">
+            <div class="panel panel-default product-panel col-md-3 col-sm-12" v-if="limitationInfo">
                 <div class="panel-body">
                     <h3>Product</h3>
-                    <div class="panel-label"><label for="">Version:</label> {{limitInfo.version}}</div>
-                    <div class="panel-label"><label for="">Total:</label> {{limitInfo.limitationNumber}}</div>
-                    <div class="panel-label"><label for="">Binded:</label> {{limitInfo.bindNumber}}</div>
+                    <div class="panel-label"><label for="">Version:</label> {{limitationInfo.version}}</div>
+                    <div class="panel-label"><label for="">Total:</label> {{limitationInfo.limitationNumber}}</div>
+                    <div class="panel-label"><label for="">Binded:</label> {{limitationInfo.bindNumber}}</div>
                     <div class="panel-label"><label for="">Unbinded:</label> {{unbindNumber}}</div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                         <tr v-for="(bind,index) in bindList">
                             <!--<td><input type="checkbox"></td>-->
                             <td>{{index+1}}</td>
-                            <!--<td>{{limit.bindCnt}}</td>-->
+                            <!--<td>{{limitationInfo.bindCount}}</td>-->
                             <td class="break-line">{{bind.createTime | dateFilter}}</td>
                             <td class="break-line">
                                 <span v-if="bind.machineCode">{{bind.machineCode}}</span>
@@ -64,7 +64,7 @@
                                 <span v-if="bind.activeCode">{{bind.activeCode}}</span>
                                 <small v-else>none</small>
                             </td>
-                            <td><span class="label label-info label-unbind" @click="unbindLimit(index)">Unbind</span></td>
+                            <td><span class="label label-info label-unbind" @click="unbindLimitation(index)">Unbind</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -88,15 +88,15 @@ export default {
         bindList() {
             return this.$store.getters['limitation/bindList'];
         },
-        limitInfo() {
-            return this.$store.getters['limitation/limitInfo'];
+        limitationInfo() {
+            return this.$store.getters['limitation/limitationInfo'];
         },
         unbindNumber() {
-            return this.limitInfo.limitationNumber - this.limitInfo.bindNumber;
+            return this.limitationInfo.limitationNumber - this.limitationInfo.bindNumber;
         }
     },
     methods: {
-        bindLimit() {
+        bindLimitation() {
             this.$store.dispatch('limitation/bind', this.bindMachineCode)
             .then(() => {
                 this.clearBindInfo();
@@ -106,7 +106,7 @@ export default {
         clearBindInfo() {
             this.bindMachineCode = ''
         },
-        unbindLimit(index) {
+        unbindLimitation(index) {
             const licenseId = this.bindList[index].id;
             this.$store.dispatch('limitation/unbind', licenseId)
             .then(() => {

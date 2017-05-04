@@ -1,9 +1,9 @@
 <template>
-<div class="login ">
-    <div class="panel">
+<div class="common-panel container">
+    <div class="panel col-sm-4 col-sm-offset-4">
         <div class="register panel-pre"><router-link to="/register">Sign up</router-link></div>
         <div class="panel-header">
-            <span class="glyphicon glyphicon-user"></span>
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
             Sign in
         </div>
         
