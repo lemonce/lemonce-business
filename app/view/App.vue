@@ -2,9 +2,7 @@
 <div @click="hideNavBar">
     <nav-bar></nav-bar>
     <div id="main-container" class="container-fluid">
-        <div class="container">
-            <router-view class="common-background"></router-view>
-        </div>
+        <router-view></router-view>
     </div>
     <foot-bar id="app-footer"></foot-bar>
     <modal></modal>
@@ -24,8 +22,7 @@ export default {
     }
 }
 </script>
-
-<style>
+<style lang="postcss" scoped>
 #main-container {
     min-height: 500px;
     background-color: #f8f8f8;

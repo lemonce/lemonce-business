@@ -1,4 +1,18 @@
-
+.common-panel {
+    padding-top: 60px;
+}
+.common-panel .panel {
+    padding: 14px 30px;
+    border-radius: 4px;
+    border: 1px solid #E3E9ED;
+}
+.common-panel .panel-header {
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+.common-panel .panel-pre{
+    float: right;
+}
 .panel-pre a {
     color: #4eb4b4;
     cursor: pointer;
