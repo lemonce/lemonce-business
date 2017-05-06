@@ -74,7 +74,7 @@ export default {
             this.userInfo.email = this.user.email;
             this.userInfo.phone = this.user.phone;
         }).catch(err => {
-            this.$store.commit('openModal', 'Please Sign In!');
+            // this.$store.commit('openModal', 'Please Sign In!');
             this.$router.push('/'); 
         });
     },

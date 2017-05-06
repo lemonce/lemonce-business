@@ -7,6 +7,7 @@
                     <div class="panel-body">
                         <h3>
                             Bind
+                            <small><span :class="helpMessage.style">{{helpMessage.content}}</span></small>
                         </h3>
                         <hr>
                         <form class="form-horizontal">
@@ -81,7 +82,11 @@ export default {
     },
     data() {
         return {
-            bindMachineCode: ''
+            bindMachineCode: '',
+            helpMessage: {
+                style: '',
+                content: ''
+            }
         }
     },
     computed: {
@@ -100,8 +105,12 @@ export default {
             this.$store.dispatch('limitation/bind', this.bindMachineCode)
             .then(() => {
                 this.clearBindInfo();
-                this.$store.commit('openModal', 'Bind Success');
-            }).catch(err => this.$store.commit('openModal', err.body.msg));
+                this.clearHelpMessage();
+                // this.$store.commit('openModal', 'Bind Success');
+            }).catch(err => {
+                // this.$store.commit('openModal', err.body.msg)
+                this.showHelpMessage('text-danger', err.body.msg)
+            });
         },
         clearBindInfo() {
             this.bindMachineCode = ''
@@ -110,8 +119,20 @@ export default {
             const licenseId = this.bindList[index].id;
             this.$store.dispatch('limitation/unbind', licenseId)
             .then(() => {
-                this.$store.commit('openModal', 'Success!');
-            }).catch(err => this.$store.commit('openModal', err.body.msg));
+                this.clearHelpMessage();
+                // this.$store.commit('openModal', 'Success!');)
+            }).catch(err => {
+                // this.$store.commit('openModal', err.body.msg)
+                this.showHelpMessage('text-danger', err.body.msg)
+            });
+        },
+        clearHelpMessage() {
+            this.helpMessage.style = '';
+            this.helpMessage.content = '';
+        },
+        showHelpMessage(style, content) {
+            this.helpMessage.style = style;
+            this.helpMessage.content = content;
         }
     },
     filters: {

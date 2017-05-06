@@ -16,7 +16,8 @@ router.get('/captcha', User.captcha);
 router.post('/', User.create);
 router.put('/:userId',interceptor.requireLogin, User.update);
 router.patch('/changepwd',interceptor.requireLogin, User.changePassword);
-router.patch('/verify', User.verifyEmail);
+router.get('/verify', User.verifyEmail);
+router.get('/send', interceptor.requireLogin, User.sendVerifyEmail);
 
 router.options('*', function (req, res) {
 	res.status(200).json();

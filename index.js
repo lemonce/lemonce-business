@@ -56,7 +56,11 @@ if(isProd) {
 
 function loadConfig(config) {
 	for(let key in config) {
-		process.env[key] = config[key];
+		if(config[key] instanceof Array) {
+			process.env[key] = config[key].join(',');
+		} else {
+			process.env[key] = config[key];
+		}
 	}
 }
 

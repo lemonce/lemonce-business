@@ -30,5 +30,5 @@ module.exports = {
 	// page info
 	PAGE_TITLE: 'Lemonce-Business',
 	PAGE_DESCRIPTION: 'aaa',
-	PAGE_KEYWORDS: 'lemonce'
+	PAGE_KEYWORDS: ['lemonce', 'license']
 };

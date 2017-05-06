@@ -73,6 +73,15 @@ export default {
 					throw new Error();
 				}
 			});
+		},
+		sendVerifyEmail() {
+			return Vue.http.get('user/send').then(response => {
+				if(response.ok) {
+					return true;
+				} else {
+					throw new Error();
+				}
+			});
 		}
 	},
 	mutations: {

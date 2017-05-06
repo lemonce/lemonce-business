@@ -7,6 +7,7 @@
             Sign up
         </div>
         <div class="panel-body">
+        <span id="helpBlock" class="help-block"><p :class="helpMessage.style">{{helpMessage.content}}</p></span>
         <form class="form-horizontal">
             <div class="form-group">
                 <label class="control-label col-md-3" for="username">Username</label>
@@ -69,7 +70,11 @@ export default {
                 phone: '',
                 captcha: ''
             },
-            captchaSvg: ''
+            captchaSvg: '',
+            helpMessage: {
+                style: '',
+                content: ''
+            }
         }
     },
     created() {
@@ -81,14 +86,18 @@ export default {
     methods: {
         register() {
             if(this.user.password !== this.user.confirmPassword) {
-                this.$store.commit('openModal', 'Password not match confirmation!');
+                this.showHelpMessage('text-danger', 'Password not match confirmation!');
+                this.updateCaptcha();
+                // this.$store.commit('openModal', 'Password not match confirmation!');
                 return;
             }
             this.$store.dispatch('user/create', this.user).then(() => {
-                this.$store.commit('openModal', 'An email has been sent to your email address. Please use the link in email to activate your account.');
+                // this.showHelpMessage('text-info', 'An email has been sent to your email address. Please use the link in email to activate your account.');
+                // this.$store.commit('openModal', 'An email has been sent to your email address. Please use the link in email to activate your account.');
                 this.$router.push('/');
             }).catch(err => {
-                this.$store.commit('openModal', err.body.msg);
+                this.showHelpMessage('text-danger', err.body.msg);
+                // this.$store.commit('openModal', err.body.msg);
             });
         },
         updateCaptcha() {
@@ -97,6 +106,10 @@ export default {
                     this.captchaSvg = response.body;
                 }
             });
+        },
+        showHelpMessage(style, content) {
+            this.helpMessage.style = style;
+            this.helpMessage.content = content;
         }
     }
 }

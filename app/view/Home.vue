@@ -8,6 +8,7 @@
         </div>
         
         <div class="panel-body">
+            <span id="helpBlock" class="help-block"><p :class="helpMessage.style">{{helpMessage.content}}</p></span>
             <form class="form-horizontal">
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Username" v-model="username">
@@ -34,7 +35,11 @@ export default {
     data() {
         return {
             username: '',
-            password: ''
+            password: '',
+            helpMessage: {
+                style: '',
+                content: ''
+            }
         }
     },
     computed: {
@@ -50,7 +55,14 @@ export default {
                 password: this.password
             }).then(() => {
                 this.$router.push('/account/manage');
-            }).catch(err => this.$store.commit('openModal', err.body.msg));
+            }).catch(err => {
+                // this.$store.commit('openModal', err.body.msg)
+                this.showHelpMessage('text-danger', err.body.msg);
+            });
+        },
+        showHelpMessage(style, content) {
+            this.helpMessage.style = style;
+            this.helpMessage.content = content;
         }
     }
 }
