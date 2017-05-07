@@ -78,7 +78,7 @@ app.get('/', (req, res) => {
 	if (!renderer) {
 		return res.end('waiting for compilation... refresh in a moment.');
 	}
-	res.setHeader('Content-Type', 'text-html');
+	res.setHeader('Content-Type', 'text/html');
 	const context = {};
 	const renderStream = renderer.renderToStream(context);
 
@@ -131,7 +131,8 @@ try {
 	httpsServer = https.createServer(options, app);
 	httpsServer.listen(app.get('sslport'), function (err) {
 		if (err) {
-			throw err;
+			console.log(err);
+			return;
 		}
 
 		console.log('Server is running on port: ' + app.get('sslport'));
