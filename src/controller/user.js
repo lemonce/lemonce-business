@@ -9,12 +9,12 @@ exports.login = wrap(function * (req, res, next) {
 	const username = req.body.username;
 	const pw = req.body.password;
 	if (!username || !pw) {
-		return next(createError(404, 'Invalid Information.'));
+		return next(createError(400, 'Invalid Information.'));
 	}
 
 	const user = yield UserModel.search(username, pw);
 	if (user === undefined) {
-		return next(createError(404, 'Invalid username or password.'));
+		return next(createError(400, 'Invalid username or password.'));
 	}
 
 	req.session.user = user;

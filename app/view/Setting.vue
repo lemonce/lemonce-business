@@ -33,7 +33,10 @@
                 </div>
             </div>
         </form>
-        <h3>Change password</h3>
+        <h3>
+            Change password
+            <small><span :class="passwordMessage.style">{{passwordMessage.content}}</span></small>
+        </h3>
         <hr>
         <form class="form-horizontal">
             <div class="form-group">
@@ -89,6 +92,10 @@ export default {
                 pwd: '',
                 newPwd: '',
                 confirmPwd: ''
+            },
+            passwordMessage: {
+                style: '',
+                content: ''
             }
         }
     },
@@ -101,23 +108,38 @@ export default {
             this.$store.dispatch('user/update', this.userInfo)
             .then(() => {
                 this.$store.commit('openModal', 'Success!');
+                this.clearPasswordMessage();
             });
         },
         changePassword() {
             if(this.userPassword.newPwd !== this.userPassword.confirmPwd) {
-				this.$store.commit('openModal', 'Password not match confirmation.');
+				// this.$store.commit('openModal', 'Password not match confirmation.');
+                this.showPasswordMessage('text-danger', 'Password not match confirmation.');
                 return;
 			}
             this.$store.dispatch('user/changePassword', this.userPassword)
             .then(() => {
-                this.$store.commit('openModal', 'Change Password Success.');
+                this.showPasswordMessage('text-success', 'Change Password Success.');
+                // this.$store.commit('openModal', 'Change Password Success.');
                 this.clearPasswordInput();
-            }).catch(err => this.$store.commit('openModal', err.body.msg));
+            }).catch(err => {
+                this.showPasswordMessage('text-danger', err.body.msg);
+                // this.$store.commit('openModal', err.body.msg)
+            });
         },
         clearPasswordInput() {
             this.userPassword.pwd = '';
             this.userPassword.newPwd = '';
             this.userPassword.confirmPwd = '';
+            this.clearPasswordMessage();
+        },
+        clearPasswordMessage() {
+            this.passwordMessage.style = '';
+            this.passwordMessage.content = ''
+        },
+        showPasswordMessage(style, content) {
+            this.passwordMessage.style = style;
+            this.passwordMessage.content = content;
         }
     },
     filters: {

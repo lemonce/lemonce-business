@@ -21,7 +21,7 @@ export default {
     padding: 1rem 3rem;
     margin-bottom: 1rem;
     color: black;
-    background-color: #f7f7f7;
+    background-color: #f5f5f5;
     text-align: center;
 }
 .side-bar .list-group-item:hover {

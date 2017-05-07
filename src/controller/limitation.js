@@ -31,7 +31,7 @@ exports.bind = wrap(function * (req, res, next) {
 	const bindNumber = yield LicenseModel.findCount('userId', userId);
 
 	if(!summary || summary.limitationNumber <= bindNumber) {
-		return next(createError(404, 'There is no valid product limit for your account.'));
+		return next(createError(401, 'There is no valid product limit for your account.'));
 	}
 
     //请求和license绑定

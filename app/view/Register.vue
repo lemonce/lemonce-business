@@ -7,8 +7,10 @@
             Sign up
         </div>
         <div class="panel-body">
-        <span id="helpBlock" class="help-block"><p :class="helpMessage.style">{{helpMessage.content}}</p></span>
         <form class="form-horizontal">
+            <div class="form-group" v-if="helpMessage.content">
+                <span :class="helpMessage.style" class="col-md-offset-3 col-md-7">{{helpMessage.content}}</span>
+            </div>
             <div class="form-group">
                 <label class="control-label col-md-3" for="username">Username</label>
                 <div class="col-md-7">
@@ -97,6 +99,7 @@ export default {
                 this.$router.push('/');
             }).catch(err => {
                 this.showHelpMessage('text-danger', err.body.msg);
+                this.updateCaptcha();
                 // this.$store.commit('openModal', err.body.msg);
             });
         },

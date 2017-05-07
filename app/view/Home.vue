@@ -8,8 +8,10 @@
         </div>
         
         <div class="panel-body">
-            <span id="helpBlock" class="help-block"><p :class="helpMessage.style">{{helpMessage.content}}</p></span>
             <form class="form-horizontal">
+                <div class="form-group">
+                    <span :class="helpMessage.style">{{helpMessage.content}}</span>
+                </div>
                 <div class="form-group">
                     <input type="text" class="form-control" placeholder="Username" v-model="username">
                 </div>
