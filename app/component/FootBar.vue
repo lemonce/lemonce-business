@@ -19,4 +19,9 @@ export default {
 }
 </script>
 
-<style lang="postcss"></style>
+<style lang="postcss" scoped>
+h5 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+</style>

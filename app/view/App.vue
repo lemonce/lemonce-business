@@ -31,5 +31,6 @@ export default {
     border-radius: 0;
     color: #9d9d9d;
     text-align: center;
+    margin-bottom: 0;
 }
 </style>
