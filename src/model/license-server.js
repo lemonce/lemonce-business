@@ -15,10 +15,10 @@ exports.activate = function (userID, version, machineCode, period = LICENSE_ACTI
 	return rp(options);
 };
 
-exports.delete = function (id) {
+exports.delete = function (code) {
 	const options = {
 		method: 'DELETE',
-		uri: `${LICENSE_SERVER}/${id}`,
+		uri: `${LICENSE_SERVER}/${code}`,
 		json: true
 	};
 	return rp(options);

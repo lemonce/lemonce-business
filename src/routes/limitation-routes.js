@@ -14,7 +14,7 @@ router.put('/:limitationId([0-9]+)', Limitation.updateSummary);
 
 router.get('/bind', interceptor.requireLogin, Limitation.getBindList);
 router.post('/bind', interceptor.requireLogin, Limitation.bind);
-router.delete('/bind/:licenseId', interceptor.requireLogin, Limitation.unBind);
+router.delete('/bind/:code', interceptor.requireLogin, Limitation.unBind);
 
 router.options('*', function (req, res) {
 	res.status(200).json();

@@ -42,22 +42,22 @@ exports.bind = wrap(function * (req, res, next) {
 		return next(createError(400, result.msg));
 	}
 
-	yield LicenseModel.create({userId, licenseId: result.license.id});
+	yield LicenseModel.create({userId, licenseId: result.license.code});
 
 	res.status(200).json({});
 });
 
 exports.unBind = wrap(function * (req, res, next) {
-	const licenseId = req.params.licenseId;
+	const code = req.params.code;
 
     //请求和license解除绑定,
-	const result = yield LicenseServer.delete(licenseId);
+	const result = yield LicenseServer.delete(code);
 
 	if(!result.success) {
 		return next(createError(400, result.msg));
 	}
 
-	yield LicenseModel.deleteById(licenseId);
+	yield LicenseModel.deleteById(code);
 
 	res.status(200).json({});
 });
@@ -92,9 +92,9 @@ exports.getBindList = wrap(function * (req, res, next) {
 
 	const bindLicenses = yield LicenseModel.findByUser(userId);
 
-	const bindList = result.licenses && result.licenses.filter(license => {
+	const bindList = result.license && result.license.filter(license => {
 		for( let obj of bindLicenses) {
-			if(obj.licenseId === license.id) return true;
+			if(obj.licenseId === license.code) return true;
 		}
 		return false;
 	});

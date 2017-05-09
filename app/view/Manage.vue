@@ -62,7 +62,7 @@
                                 <small v-else>none</small>
                             </td>
                             <td class="break-line">
-                                <span v-if="bind.activeCode">{{bind.activeCode}}</span>
+                                <span v-if="bind.code">{{bind.code}}</span>
                                 <small v-else>none</small>
                             </td>
                             <td><span class="label label-info label-unbind" @click="unbindLimitation(index)">Unbind</span></td>
@@ -116,8 +116,8 @@ export default {
             this.bindMachineCode = ''
         },
         unbindLimitation(index) {
-            const licenseId = this.bindList[index].id;
-            this.$store.dispatch('limitation/unbind', licenseId)
+            const code = this.bindList[index].code;
+            this.$store.dispatch('limitation/unbind', code)
             .then(() => {
                 this.clearHelpMessage();
                 // this.$store.commit('openModal', 'Success!');)
