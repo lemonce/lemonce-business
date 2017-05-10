@@ -206,7 +206,7 @@ CREATE TABLE `biz_user` (
   `USERNAME` varchar(50) NOT NULL,
   `PASSWORD` varchar(100) NOT NULL,
   `SALT` char(6) NOT NULL,
-  `EMAIL` varchar(255) DEFAULT NULL,
+  `EMAIL` varchar(320) DEFAULT NULL,
   `EMAIL_VERIFIED` tinyint(1) DEFAULT '0',
   `EMAIL_VERIFIED_CODE` char(40) NOT NULL,
   `PHONE` varchar(45) DEFAULT NULL,

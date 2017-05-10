@@ -1,9 +1,10 @@
-import Home from './view/Home';
-import Confirm from './view/Confirm';
 import Account from './view/Account';
-import Setting from './view/Setting';
+import Confirm from './view/Confirm';
+import ErrorPage from './view/ErrorPage';
+import Home from './view/Home';
 import Manage from './view/Manage';
 import Register from './view/Register';
+import Setting from './view/Setting';
 
 export default [
 	{
@@ -13,6 +14,10 @@ export default [
 	{
 		path: '/email',
 		component: Confirm
+	},
+	{
+		path: '/error',
+		component: ErrorPage
 	},
 	{
 		path: '/register',

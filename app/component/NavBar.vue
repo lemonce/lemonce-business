@@ -37,7 +37,7 @@
                 <div v-if="isLoggedIn">
                     <ul class="nav navbar-nav navbar-right">
                         <li class=""><a class="current-user">User: {{user.username}}</a></li>
-                        <li class=""><a @click="logout">Sign out</a></li>
+                        <li class=""><a @click="logout" id="logoutLink">Sign out</a></li>
                     </ul>
                 </div>
                 <div v-else>

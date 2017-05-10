@@ -51,7 +51,7 @@
             <div class="form-group">
                 <label class="control-label col-md-3" for=""></label>
                 <div class="col-md-6">
-                    <input type="button" class="btn btn-fill" @click="register" value="Register">
+                    <input type="button" class="btn btn-fill" @click="register" value="Register" id="registerBtn">
                 </div>
             </div>
         </form>

@@ -3,6 +3,7 @@
 
 process.env.VUE_ENV = 'server';
 
+loadConfig(require('./config.example'));
 const isProd = process.env.NODE_ENV === 'production';
 
 const fs = require('fs');
@@ -30,9 +31,11 @@ const parseMeta = (head) => {
 	const title = process.env.PAGE_TITLE;
 	const description = process.env.PAGE_DESCRIPTION;
 	const keywords = process.env.PAGE_KEYWORDS;
+	const favicon = process.env.FAVICON;
 	head = head.replace(/(<title>)(.*?)(<\/title>)/, `$1${title}$3`);
 	head = head.replace(/(<meta name=description content=")(.*?)(">)/, `$1${description}$3`);
 	head = head.replace(/(<meta name=keywords content=")(.*?)(">)/, `$1${keywords}$3`);
+	head = head.replace(/(<link rel=icon href=")(.*?)(">)/, `$1${favicon}$3`);
 	return head;
 };
 
@@ -40,11 +43,9 @@ let renderer;
 let indexHTML;
 
 if(isProd) {
-	loadConfig(require('./prod.config'));
 	renderer = createBundleRenderer(fs.readFileSync(path.resolve('./dist/server-bundle.js'), 'utf-8'));
 	indexHTML = parseHTML(fs.readFileSync(path.resolve('./dist/index.html'), 'utf-8'));
 } else {
-	loadConfig(require('./dev.config'));
 	devServer(app, {
 		indexUpdated: index => {
 			indexHTML = parseHTML(index);
@@ -66,16 +67,27 @@ function loadConfig(config) {
 }
 
 
-require('dotenv').load();
-const config = require('./src/express.config');
-config(app);
-
 app.set('port', process.env.PORT);
 app.set('sslport', process.env.SSLPORT);
 
+require('dotenv').load();
+const config = require('./src/express.config');
+config(app);
+if(process.env.REDIRECT_TO_HTTPS === 'true') {
+	app.get('*', (req, res, next) => {
+		if(req.protocol !== 'https') {
+			const host = req.headers.host.substr(0, req.headers.host.indexOf(':'));
+			res.redirect(`https://${host}:${app.get('sslport')}${req.url}`);
+		} else {
+			next();
+		}
+	});
+}
+
+
 app.use('/dist', express.static(path.resolve('./dist')));
 
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
 	if (!renderer) {
 		return res.end('waiting for compilation... refresh in a moment.');
 	}

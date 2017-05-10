@@ -1,4 +1,8 @@
+const {resolve} = require('path');
 module.exports = {
+	// production or dev
+	NODE_ENV: 'dev',
+
 	// database connection
 	MYSQL_USER: 'root',
 	MYSQL_PASSWORD: '',
@@ -10,12 +14,15 @@ module.exports = {
 	SERVER_HOST: 'http://localhost:8081',
 
 	// session store location
-	SESSION_STORE: './sessions',
+	SESSION_STORE: resolve(__dirname, 'sessions'),
+	FAVICON: resolve(__dirname, 'public/favicon.ico'),
+	LOG_FILE: resolve(__dirname, 'error.log'),
 
 	// https port
 	SSLPORT: 8082,
-	KEY: './cert/private.pem',
-	CERTIFICATE: './cert/file.crt',
+	KEY: resolve(__dirname, 'cert/private.pem'),
+	CERTIFICATE: resolve(__dirname, 'cert/file.crt'),
+	REDIRECT_TO_HTTPS: true,
 
 	// url for license server
 	LICENSE_SERVER: 'http://139.129.225.83:8080/license',
@@ -29,6 +36,6 @@ module.exports = {
 
 	// page info
 	PAGE_TITLE: 'Lemonce-Business',
-	PAGE_DESCRIPTION: 'aaa',
+	PAGE_DESCRIPTION: 'lemonce-business',
 	PAGE_KEYWORDS: ['lemonce', 'license']
 };

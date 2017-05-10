@@ -13,13 +13,13 @@
                     <span :class="helpMessage.style">{{helpMessage.content}}</span>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Username" v-model="username">
+                    <input type="text" class="form-control" placeholder="Username" v-model="username" id="username">
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Password" v-model="password">
+                    <input type="password" class="form-control" placeholder="Password" v-model="password" id="password">
                 </div>
                 <div class="form-group">
-                    <input type="button" class="btn btn-fill" @click="login" value="Sign in">
+                    <input type="button" class="btn btn-fill" @click="login" value="Sign in" id="loginBtn">
                 </div>
             </form>
         </div>

@@ -7,13 +7,7 @@ const limitationRoutes = require('./limitation-routes');
 const purchaseRoutes = require('./purchase-routes');
 
 const router = new express.Router();
-const oneDay = 86400000;
 
-// Static files middleware
-// router.use('/', express.static(
-// 	path.resolve(__dirname, '../public'),
-// 	{maxage: oneDay * 3}
-// ));
 router.use('/limitation', limitationRoutes);
 router.use('/user', userRoutes);
 router.use('/purchase', purchaseRoutes);

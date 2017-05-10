@@ -1,7 +1,10 @@
 'use strict';
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const express = require('express');
+const favicon = require('serve-favicon');
 const logger = require('morgan');
+const path = require('path');
 const routes = require('../src/routes');
 const session = require('express-session');
 const validator = require('express-validator');
@@ -18,11 +21,17 @@ module.exports = function (app) {
 			}
 		};
 		winston.handleExceptions(new winston.transports.File({
-			filename: './error.log'
+			filename: process.env.LOG_FILE
 		}));
 	}
 	app.use(logger('dev', logOption));
 
+	const oneDay = 86400000;
+	app.use(favicon(process.env.FAVICON));
+	app.use('/public', express.static(
+		path.resolve('./public'),
+		{maxage: oneDay * 3}
+	));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(cookieParser());

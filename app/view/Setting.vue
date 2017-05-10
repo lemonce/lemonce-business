@@ -23,13 +23,13 @@
             </div>
             <div class="form-group">
                 <label class="control-label col-md-4" for="telephone">Register Date</label>
-                <div class="col-md-8">{{user.registerTime | dateFilter}}</div>
+                <div class="col-md-8" id="registerDate">{{user.registerTime | dateFilter}}</div>
             </div>
             <div class="form-group">
                 <label class="control-label col-md-4" for="telephone"></label>
                 <div class="col-md-8">
-                    <input type="button" class="btn btn-fill" @click="submitInfo" value="Submit">
-                    <input type="button" class="btn btn-outline" @click="resetInfo" value="Reset">
+                    <input type="button" class="btn btn-fill" @click="submitInfo" value="Submit" id="submitBtn">
+                    <input type="button" class="btn btn-outline" @click="resetInfo" value="Reset" id="resetBtn">
                 </div>
             </div>
         </form>
@@ -58,9 +58,8 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-md-4" for="telephone"></label>
                 <div class="col-md-8">
-                    <input type="button" class="btn btn-fill" @click="changePassword" value="Submit">
+                    <input type="button" class="btn btn-fill" @click="changePassword" value="Submit" id="passwordBtn">
                 </div>
             </div>
         </form>

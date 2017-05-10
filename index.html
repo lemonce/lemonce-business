@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="keywords" content="">
+    <link rel="icon" href="" sizes="16x16">
     <% if(htmlWebpackPlugin.options.environment === 'production') { %>
     <% for(key in htmlWebpackPlugin.files.css){ %>
     <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[key] %>">
