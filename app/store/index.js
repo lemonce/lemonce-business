@@ -5,6 +5,7 @@ import * as mutations from './mutations';
 
 import user from './modules/user';
 import limitation from './modules/limitation';
+import product from './modules/product';
 
 Vue.use(Vuex);
 
@@ -17,7 +18,7 @@ const store = new Vuex.Store({
 	mutations,
 	getters,
 	modules: {
-		user, limitation
+		user, limitation, product
 	}
 });
 

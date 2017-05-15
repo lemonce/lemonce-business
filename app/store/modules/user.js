@@ -82,6 +82,26 @@ export default {
 					throw new Error();
 				}
 			});
+		},
+		sendResetEmail({commit}, email) {
+			return Vue.http.post('user/sendreset', {
+				email
+			}).then(response => {
+				if(response.ok) {
+					return true;
+				} else {
+					throw new Error();
+				}
+			});
+		},
+		resetPassword({commit}, {token, password}) {
+			return Vue.http.post('user/resetpwd',{token, password}).then(response => {
+				if(response.ok) {
+					return true;
+				} else {
+					throw new Error();
+				}
+			});
 		}
 	},
 	mutations: {

@@ -8,15 +8,18 @@
         </div>
         
         <div class="panel-body">
-            <form class="form-horizontal">
+            <form>
                 <div class="form-group">
-                    <span :class="helpMessage.style">{{helpMessage.content}}</span>
-                </div>
-                <div class="form-group">
+                    <label for="username">Username or Email Address</label>
                     <input type="text" class="form-control" placeholder="Username" v-model="username" id="username">
                 </div>
                 <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="pull-right panel-pre">
+                        <router-link to="/reset_password">Forget Password?</router-link>
+                    </div>
                     <input type="password" class="form-control" placeholder="Password" v-model="password" id="password">
+                    <span id="helpBlock" :class="helpMessage.style" class="help-text">{{helpMessage.content}}</span>
                 </div>
                 <div class="form-group">
                     <input type="button" class="btn btn-fill" @click="login" value="Sign in" id="loginBtn">

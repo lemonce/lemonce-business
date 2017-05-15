@@ -12,9 +12,9 @@
             </div>
             <div class="hidden-xs">
                 <ul class="nav navbar-nav">
-                    <li class=""><router-link to="/">Home</router-link></li>
-                    <!--<li class=""><router-link to="/product">购买套餐</router-link></li>-->
-                    <li class=""><router-link to="/account/manage">Management</router-link></li>
+                    <li><router-link to="/">Home</router-link></li>
+                    <li><router-link to="/product">Product</router-link></li>
+                    <li><router-link to="/account/manage">Management</router-link></li>
                 </ul>
                 <div v-if="isLoggedIn">
                     <ul class="nav navbar-nav navbar-right">
@@ -24,6 +24,7 @@
                 </div>
                 <div v-else>
                     <ul class="nav navbar-nav navbar-right">
+                        <li class=""><router-link to="/">Sign in</router-link></li>
                         <li class=""><router-link to="/register">Sign up</router-link></li>
                     </ul>
                 </div>
@@ -31,7 +32,7 @@
             <div class="mobile-nav" v-show="showNavList">
                 <ul class="nav navbar-nav">
                     <li class=""><router-link to="/">Home</router-link></li>
-                    <!--<li class=""><router-link to="/product">购买套餐</router-link></li>-->
+                    <li class=""><router-link to="/product">Product</router-link></li>
                     <li class=""><router-link to="/account/manage">Management</router-link></li>
                 </ul>
                 <div v-if="isLoggedIn">
@@ -42,6 +43,7 @@
                 </div>
                 <div v-else>
                     <ul class="nav navbar-nav navbar-right">
+                        <li class=""><router-link to="/">Sign in</router-link></li>
                         <li class=""><router-link to="/register">Sign up</router-link></li>
                     </ul>
                 </div>

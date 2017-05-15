@@ -9,11 +9,11 @@ const joinUpdateSet = map.joinUpdateSet;
 const joinInsertSet = map.joinInsertSet;
 
 const BaseColumnList = [
-	'PRODUCT_ID', 'INCREMENT', 'PRICE'
+	'PRODUCT_ID', 'MARKET_ID', 'INCREMENT', 'PRICE'
 ];
 
 const BaseWriteList = [
-	'INCREMENT', 'PRICE'
+	'MARKET_ID', 'INCREMENT', 'PRICE'
 ];
 const ProductModel = {
 	create: function (product) {
@@ -23,7 +23,7 @@ const ProductModel = {
 	},
 	list: function (mask) {
 		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);
-		return db.q(`SELECT ${filteredColumn} FROM ${PRODUCT_TABLE}`);
+		return db.q(`SELECT ${filteredColumn} FROM ${PRODUCT_TABLE}`).then(rows => rows.map(toProp));
 	},
 	findById: function (productId, mask) {
 		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, mask);

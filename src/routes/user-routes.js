@@ -18,6 +18,8 @@ router.put('/:userId',interceptor.requireLogin, User.update);
 router.patch('/changepwd',interceptor.requireLogin, User.changePassword);
 router.get('/verify', User.verifyEmail);
 router.get('/send', interceptor.requireLogin, User.sendVerifyEmail);
+router.post('/sendreset', User.resetEmail);
+router.post('/resetpwd', User.resetPassword);
 
 router.options('*', function (req, res) {
 	res.status(200).json();

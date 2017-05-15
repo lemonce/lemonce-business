@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer');
 const wrap = require('co-express');
 const svgCaptcha = require('svg-captcha');
 const UserModel = require('../model/user');
+const ResetModel = require('../model/reset');
 
 exports.login = wrap(function * (req, res, next) {
 	const username = req.body.username;
@@ -74,9 +75,9 @@ exports.isExisted = wrap(function * (req, res) {
 	const type = req.params.type;
 	const value = req.params.value;
 
-	const exist = yield UserModel.isExist(type, value);
+	const user = yield UserModel.isExist(type, value);
 
-	res.status(200).json({isExisted: exist});
+	res.status(200).json({isExisted: user !== undefined});
 });
 
 exports.changePassword = wrap(function * (req, res, next) {
@@ -114,7 +115,54 @@ exports.captcha = function (req, res) {
 	res.status(200).send(c.data);
 };
 
+exports.resetEmail = wrap(function * (req, res, next) {
+	const email = req.body.email;
+	const user = yield UserModel.isExist('email', email);
+	if(user === undefined) {
+		return next(createError(400, 'Can\'t find that email, sorry.'));
+	}
+	yield ResetModel.create(user.userId);
+	const resetInfo = yield ResetModel.findValid(user.userId);
+	sendResetEmail(email, resetInfo.token);
+	res.status(200).json({});
+});
+
+exports.resetPassword = wrap(function * (req, res, next) {
+	const token = req.body.token;
+	const password = req.body.password;
+
+	const resetInfo = yield ResetModel.findByToken(token);
+
+	if(resetInfo === undefined) {
+		return next(createError(400, 'It looks like you used an invalid password reset link. Please try again.'));
+	}
+
+	yield UserModel.changePassword(resetInfo.userId, password);
+
+	res.status(200).json({});
+});
+
 function sendConfirmEmail(receiverAddress, verifiedCode) {
+	const mailOptions = {
+		from: process.env.EMAIL_SENDER_ADDRESS,
+		to: receiverAddress,
+		subject: '[Lemonce] Lemonce Business Email Confirmation',
+		text: `Go to the link to activate your account. ${process.env.SERVER_HOST}/user/verify?eid=${verifiedCode}`
+	};
+	sendEmail(mailOptions);
+}
+
+function sendResetEmail(receiverAddress, token) {
+	const mailOptions = {
+		from: process.env.EMAIL_SENDER_ADDRESS,
+		to: receiverAddress,
+		subject: '[Lemonce] Please Reset your password',
+		text: `Use the following link within the next 3 days to reset your password. ${process.env.SERVER_HOST}/#/reset_password/${token}`
+	};
+	sendEmail(mailOptions);
+}
+
+function sendEmail(mailOptions) {
 	const transporter = nodemailer.createTransport({
 		service: process.env.EMAIL_SERVICE,
 		auth: {
@@ -122,14 +170,6 @@ function sendConfirmEmail(receiverAddress, verifiedCode) {
 			pass: process.env.EMAIL_AUTH_PASSWORD
 		}
 	});
-
-	const mailOptions = {
-		from: process.env.EMAIL_SENDER_ADDRESS,
-		to: receiverAddress,
-		subject: 'Lemonce Business Email Confirmation',
-		text: `Go to the link to activate your account. ${process.env.SERVER_HOST}/user/verify?eid=${verifiedCode}`
-	};
-
 	return new Promise((resolve, reject) => {
 		transporter.sendMail(mailOptions, err => {
 			if(err) {

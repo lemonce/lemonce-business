@@ -1,0 +1,29 @@
+import Vue from 'vue';
+export default {
+	namespaced: true,
+	state: {
+		productList: []
+	},
+	getters: {
+		productList(state) {
+			return state.productList;
+		}
+	},
+	actions: {
+		updateState({commit}) {
+			return Vue.http.get('product').then(response => {
+				if(response.ok) {
+					commit('updateProductList', response.body);
+					return true;
+				} else {
+					throw new Error();
+				}
+			});
+		}
+	},
+	mutations: {
+		updateProductList(state, list) {
+			state.productList = list;
+		},
+	}
+};

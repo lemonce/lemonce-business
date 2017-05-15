@@ -1,28 +1,14 @@
 <template>
-    <div>
-        <div class="page-head main-bg-color">
-            <div class="container">
-                <h1>产品购买</h1>
-            </div>
+    <div class="container">
+        <div class="page-head">
+            <h2>产品购买</h2>
         </div>
-        <div class="page-content">
-            <div class="row">
-                <div class="container">
-                    <price-panel class="col-sm-3" v-for="item in pricelist"
-                            :price="item.price" :key="item.id"
-                            :number="item.number"
-                            :version="item.version"></price-panel>
-                </div>
-            </div>
-            <div class="row">
-                <div class="container">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <h2>购买产品</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="row">
+            <price-panel v-for="item in productList"
+                    :price="item.price" 
+                    :key="item.productId"
+                    :number="item.increment">
+            </price-panel>
         </div>
     </div>
 </template>
@@ -31,27 +17,15 @@ import PricePanel from  '../component/PricePanel.vue'
 export default {
     name: 'Product',
     components: {PricePanel},
-    data() {
-        return {
-            pricelist: [
-                {id: 1, price: '25.00', number: 10, version: 'v1.2.3'},
-                {id: 2, price: '50.00', number: 20, version: 'v1.2.3'},
-                {id: 3, price: '100.00', number: 30, version: 'v1.2.3'},
-                {id: 4, price: '150.00', number: 50, version: 'v1.2.3'},
-            ]
-        };
+    mounted() {
+        this.$store.dispatch('product/updateState');
+    },
+    computed: {
+        productList() {
+            console.log(this.$store.getters['product/productList']);
+            return this.$store.getters['product/productList'];
+        }
     }
 }
 </script>
-<style lang="postcss" scoped>
-.panel {
-    border-radius: 0;
-    border: 0;
-    font-size: 1.2em;
-    color: #505050;
-    background-color: #f7f7f7;
-}
-.panel h1 {
-    margin-bottom: 0.1rem;
-}
-</style>
+<style lang="postcss" scoped></style>

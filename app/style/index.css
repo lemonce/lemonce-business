@@ -49,5 +49,11 @@
     text-align: center;
 }
 
+.help-text {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
 
 

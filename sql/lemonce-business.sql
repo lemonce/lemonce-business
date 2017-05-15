@@ -50,10 +50,10 @@ CREATE TABLE `biz_limitation` (
   `USER_ID` int(11) DEFAULT NULL,
   `CREATE_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   `INCREMENT` int(11) DEFAULT '0',
-  `PURCHASE_ID` VARCHAR(100) DEFAULT NULL,
+  `PURCHASE_ID` varchar(100) DEFAULT NULL,
   `ACTIVED` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`LIMITATION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,7 +77,7 @@ CREATE TABLE `biz_market` (
   `NAME` varchar(45) DEFAULT NULL,
   `DESCRIPTION` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`MARKET_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,7 +103,7 @@ CREATE TABLE `biz_notification` (
   `TYPE_ID` int(11) NOT NULL COMMENT 'type enum for notification, type description can be seen in biz_notification_type',
   `RAW` mediumtext COMMENT 'json content for notification',
   PRIMARY KEY (`NOTIFICATION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -153,7 +153,7 @@ CREATE TABLE `biz_product` (
   `INCREMENT` int(11) DEFAULT NULL,
   `PRICE` float DEFAULT NULL,
   PRIMARY KEY (`PRODUCT_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -212,7 +212,7 @@ CREATE TABLE `biz_user` (
   `PHONE` varchar(45) DEFAULT NULL,
   `REGISTER_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`USER_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -221,8 +221,55 @@ CREATE TABLE `biz_user` (
 
 LOCK TABLES `biz_user` WRITE;
 /*!40000 ALTER TABLE `biz_user` DISABLE KEYS */;
-INSERT INTO `biz_user` VALUES (0,'111','46d5f8969055c735a53a5a1f4f558ba1ab39caff','b8633f','',1,'0','','2017-04-26 17:19:46'),(14,'lemonce','472b07b9fcf2c2451e8781e944bf5f77cd8457c8','bb3519','daisy@tju.edu.cn',1,'95884d0e-3257-11e7-98cf-29f44da555b8','13207550072','2017-05-06 20:29:01');
+INSERT INTO `biz_user` VALUES (0,'111','46d5f8969055c735a53a5a1f4f558ba1ab39caff','b8633f','',1,'0','','2017-04-26 17:19:46');
 /*!40000 ALTER TABLE `biz_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `biz_user_detail`
+--
+
+DROP TABLE IF EXISTS `biz_user_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `biz_user_detail` (
+  `USER_ID` int(11) NOT NULL,
+  `NATIONALITY` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`USER_ID`),
+  CONSTRAINT `USER_ID2` FOREIGN KEY (`USER_ID`) REFERENCES `biz_user` (`USER_ID`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `biz_user_detail`
+--
+
+LOCK TABLES `biz_user_detail` WRITE;
+/*!40000 ALTER TABLE `biz_user_detail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `biz_user_detail` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `biz_user_reset`
+--
+
+DROP TABLE IF EXISTS `biz_user_reset`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `biz_user_reset` (
+  `USER_ID` int(11) NOT NULL,
+  `TOKEN` char(40) NOT NULL,
+  `CREATE_TIME` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `biz_user_reset`
+--
+
+LOCK TABLES `biz_user_reset` WRITE;
+/*!40000 ALTER TABLE `biz_user_reset` DISABLE KEYS */;
+/*!40000 ALTER TABLE `biz_user_reset` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -247,7 +294,7 @@ CREATE TABLE `biz_user_summary` (
 
 LOCK TABLES `biz_user_summary` WRITE;
 /*!40000 ALTER TABLE `biz_user_summary` DISABLE KEYS */;
-INSERT INTO `biz_user_summary` VALUES (0,0,'2'),(14,0,'2');
+INSERT INTO `biz_user_summary` VALUES (0,0,'2');
 /*!40000 ALTER TABLE `biz_user_summary` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -260,7 +307,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-06 20:32:10
+-- Dump completed on 2017-05-16  2:09:32
 -- TRIGGER
 
 delimiter $
@@ -307,7 +354,7 @@ drop trigger if exists createLimitation $
 create trigger createLimitation
 after insert on biz_purchase
 for each row begin
-	if new.PURCHASE_STATUS = 'complete' then
+	if (select COUNT(*) from biz_user where EMAIL = new.EMAIL) != 0 && new.PURCHASE_STATUS = 'complete' then
 		insert into biz_limitation(USER_ID, INCREMENT, PURCHASE_ID) values(
 			(select USER_ID from biz_user where EMAIL = new.EMAIL),
             (select INCREMENT from biz_product where PRODUCT_ID = new.PRODUCT_ID),
@@ -315,4 +362,17 @@ for each row begin
         );
     end if;
 end $
+
+drop trigger if exists updateUser $
+create trigger updateUser after update on biz_user
+for each row begin
+	if new.EMAIL_VERIFIED != old.EMAIL_VERIFIED 
+		&& new.EMAIL_VERIFIED = 1 
+    && (select COUNT(*) from biz_purchase where EMAIL = new.EMAIL) != 0 then
+		  insert into biz_limitation(USER_ID, INCREMENT, PURCHASE_ID)
+			  (select new.USER_ID as USER_ID, INCREMENT, PURCHASE_ID from biz_purchase, biz_product 
+				  where EMAIL = new.EMAIL and biz_purchase.PRODUCT_ID=biz_product.PRODUCT_ID);
+	end if;
+end $
+
 delimiter ;

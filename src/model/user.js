@@ -47,12 +47,13 @@ const UserModel = {
 			});
 	},
 	isExist: function (type, value) {
+		const filteredColumn = maskColumnAndJoinKey(BaseColumnList, 'password');
 		const TYPE = toSnake(type);
 		value = db.escape(value);
 
-		return db.q(`SELECT count(1) from ${USER_TABLE}
+		return db.q(`SELECT ${filteredColumn} from ${USER_TABLE}
 				WHERE ${TYPE} = ${value} LIMIT 1`)
-			.then(rows => Boolean(rows[0]['count(1)']));
+			.then(rows => toProp(rows[0]));
 	},
 	updateById: function (userId, user) {
 		const updateQuery = joinUpdateSet(user, BaseWriteList);

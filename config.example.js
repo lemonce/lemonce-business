@@ -22,7 +22,7 @@ module.exports = {
 	SSLPORT: 8082,
 	KEY: resolve(__dirname, 'cert/private.pem'),
 	CERTIFICATE: resolve(__dirname, 'cert/file.crt'),
-	REDIRECT_TO_HTTPS: true,
+	REDIRECT_TO_HTTPS: false,
 
 	// url for license server
 	LICENSE_SERVER: 'http://139.129.225.83:8080/license',

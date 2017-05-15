@@ -30,7 +30,8 @@ export default {
         return {
             sidelist: [
                 {link: '/account/manage', text: 'Product'},
-                {link: '/account/setting', text: 'Account'}
+                {link: '/account/setting', text: 'Setting'},
+                {link: '/account/profile', text: 'Profile'}
             ],
             helpMessage: ''
         }

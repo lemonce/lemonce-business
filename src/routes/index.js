@@ -1,16 +1,17 @@
 'use strict';
 
-const path = require('path');
 const express = require('express');
 const userRoutes = require('./user-routes');
 const limitationRoutes = require('./limitation-routes');
 const purchaseRoutes = require('./purchase-routes');
+const productRoutes = require('./product-routes');
 
 const router = new express.Router();
 
 router.use('/limitation', limitationRoutes);
 router.use('/user', userRoutes);
 router.use('/purchase', purchaseRoutes);
+router.use('/product', productRoutes);
 // router.use('/purchase', purchaseRoutes);
 
 /**
