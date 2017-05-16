@@ -142,12 +142,13 @@ exports.joinUserInsertSet = function (obj, props, encryptedColumn) {
 	// should be like ['lastTime', 'login']
 	const validKeys = _.intersection(Object.keys(obj), props.map(camelize));
 
+	const salt = escape(Math.random().toString(36).substr(7));
 	var values = [];
 	var escapedVal;
 	validKeys.forEach(function (key) {
 		escapedVal = escape(obj[key]);
 		if(key === encryptedColumn) {
-			values.push('SHA1(SHA1(' + escapedVal + ')+salt)');
+			values.push('SHA1(SHA1(' + escapedVal + ')+' + salt + ')');
 		} else {
 			values.push(escapedVal);
 		}
@@ -158,7 +159,7 @@ exports.joinUserInsertSet = function (obj, props, encryptedColumn) {
 		return toSnake(key);
 	}).join(',') + ', SALT, EMAIL_VERIFIED_CODE)';
 
-	return keySet + ' values (' + values.join(',') + ',(select substring(MD5(RAND()),RAND()*26,6) as salt), UUID())';
+	return keySet + ' values (' + values.join(',') + ', ' + salt + ', UUID())';
 };
 
 /**
