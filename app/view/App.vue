@@ -25,6 +25,7 @@ export default {
 <style lang="postcss" scoped>
 #main-container {
     min-height: 500px;
+    min-height: calc(100vh - 109px);
     background-color: #f8f8f8;
 }
 #app-footer {
