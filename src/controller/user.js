@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const nodemailer = require('nodemailer');
 const wrap = require('co-express');
 const svgCaptcha = require('svg-captcha');
+const DetailModel = require('../model/detail');
 const UserModel = require('../model/user');
 const ResetModel = require('../model/reset');
 
@@ -51,6 +52,13 @@ exports.create = wrap(function * (req, res, next) {
 	res.status(200).json({});
 });
 
+exports.detail = wrap(function * (req, res) {
+	const userId = req.session.user.userId;
+
+	const detail = yield DetailModel.findById(userId);
+	res.status(200).json(detail);
+});
+
 exports.logout = function (req, res) {
 	req.session.destroy();
 
@@ -63,8 +71,9 @@ exports.info = function (req, res) {
 
 exports.update = wrap(function * (req, res) {
 	const user = req.body;
-	const userId = req.session.user.userId;
+	const userId = req.params.userId;
 	yield UserModel.updateById(userId, user);
+	yield DetailModel.updateById(userId, user);
 
 	const newUser = yield UserModel.findById(userId);
 	req.session.user = newUser;

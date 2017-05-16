@@ -22,6 +22,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="control-label" for="nationality">Nationality</label>
+                <div>
+                    <input type="text" class="form-control" id="nationality" placeholder="" v-model="userInfo.nationality">
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="control-label" for="telephone">Register Date</label>
                 <div id="registerDate">{{user.registerTime | dateFilter}}</div>
                 <span id="helpBlock" :class="profileMessage.style" class="help-text">{{profileMessage.content}} &nbsp;</span>
@@ -44,9 +50,12 @@ export default {
     mounted() {
         this.$store.dispatch('user/checkLoggedIn')
         .then(() => {
+            return this.$store.dispatch('user/getDetail');
+        }).then(() => {
             this.user = this.$store.getters['user/user'];
             this.userInfo.email = this.user.email;
             this.userInfo.phone = this.user.phone;
+            this.userInfo.nationality = this.user.nationality;
         }).catch(err => {
             // this.$store.commit('openModal', 'Please Sign In!');
             this.$router.push('/'); 
@@ -57,7 +66,8 @@ export default {
             user: {},
             userInfo: {
                 email: '',
-                phone: ''
+                phone: '',
+                nationality: ''
             },
             profileMessage: {
                 style: '',
@@ -69,8 +79,10 @@ export default {
         resetInfo() {
             this.userInfo.email = this.user.email;
             this.userInfo.phone = this.user.phone;
+            this.userInfo.nationality = this.user.nationality;
         },
         submitInfo() {
+            console.log(this.userInfo);
             this.$store.dispatch('user/update', this.userInfo)
             .then(() => {
                 this.showProfileMessage('text-success', 'Update profile success.');

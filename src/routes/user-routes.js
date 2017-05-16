@@ -11,6 +11,7 @@ router.get('/logout', User.logout);
 router.get('/:type/:value/existence', User.isExisted);
 
 router.get('/info', interceptor.requireLogin, User.info);
+router.get('/detail', interceptor.requireLogin, User.detail);
 router.get('/captcha', User.captcha);
 
 router.post('/', User.create);

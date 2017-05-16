@@ -246,6 +246,7 @@ CREATE TABLE `biz_user_detail` (
 
 LOCK TABLES `biz_user_detail` WRITE;
 /*!40000 ALTER TABLE `biz_user_detail` DISABLE KEYS */;
+INSERT INTO `biz_user_detail` VALUES (0,NULL);
 /*!40000 ALTER TABLE `biz_user_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -307,7 +308,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-16  2:09:32
+-- Dump completed on 2017-05-17  0:09:23
 -- TRIGGER
 
 delimiter $
@@ -328,9 +329,11 @@ for each row begin
 end $
 
 drop trigger if exists createSummary $
-create trigger createSummary after insert on biz_user
+drop trigger if exists createUser $
+create trigger createUser after insert on biz_user
 for each row begin
 	insert into biz_user_summary(USER_ID) values(new.USER_ID);
+  insert into biz_user_detail(USER_ID) values(new.USER_ID);
 end $
 
 drop trigger if exists updateUserSummary $

@@ -63,6 +63,13 @@ export default {
 				}
 			});
 		},
+		getDetail({commit}) {
+			return Vue.http.get('user/detail').then(response => {
+				if(response.ok && response.body) {
+					commit('updateUserDetail', response.body);
+				}
+			});
+		},
 		verifyEmail({commit}, eid) {
 			return Vue.http.patch('user/verify', {
 				eid
@@ -110,6 +117,9 @@ export default {
 		},
 		logout(state) {
 			state.user = null;
+		},
+		updateUserDetail(state, detail) {
+			Object.assign(state.user, detail);
 		}
 	}
 };
