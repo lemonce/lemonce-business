@@ -30,7 +30,7 @@
                     <div class="panel-label"><label for="">Version:</label> {{limitationInfo.version}}</div>
                     <div class="panel-label"><label for="">Total:</label> {{limitationInfo.limitationNumber}}</div>
                     <div class="panel-label"><label for="">Binded:</label> {{limitationInfo.bindNumber}}</div>
-                    <div class="panel-label"><label for="">Unbinded:</label> {{unbindNumber}}</div>
+                    <div class="panel-label"><label for="">Unused:</label> {{unbindNumber}}</div>
                 </div>
             </div>
         </div>

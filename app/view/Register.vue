@@ -103,7 +103,7 @@ export default {
             });
         },
         updateCaptcha() {
-            this.$http.get('user/captcha').then(response => {
+            this.$http.get('user/captcha?t=' + Date.now()).then(response => {
                 if(response.ok) {
                     this.captchaSvg = response.body;
                 }
