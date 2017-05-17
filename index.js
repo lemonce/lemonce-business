@@ -3,7 +3,8 @@
 
 process.env.VUE_ENV = 'server';
 
-loadConfig(require('./config.example'));
+const config = require('./prod.config');
+process.env.NODE_ENV = config.NODE_ENV;
 const isProd = process.env.NODE_ENV === 'production';
 
 const fs = require('fs');
@@ -28,10 +29,10 @@ const parseHTML = tmpl => {
 };
 
 const parseMeta = (head) => {
-	const title = process.env.PAGE_TITLE;
-	const description = process.env.PAGE_DESCRIPTION;
-	const keywords = process.env.PAGE_KEYWORDS;
-	const favicon = process.env.FAVICON;
+	const title = config.PAGE_TITLE;
+	const description = config.PAGE_DESCRIPTION;
+	const keywords = config.PAGE_KEYWORDS.join(',');
+	const favicon = config.FAVICON;
 	head = head.replace(/(<title>)(.*?)(<\/title>)/, `$1${title}$3`);
 	head = head.replace(/(<meta name=description content=")(.*?)(">)/, `$1${description}$3`);
 	head = head.replace(/(<meta name=keywords content=")(.*?)(">)/, `$1${keywords}$3`);
@@ -56,24 +57,12 @@ if(isProd) {
 	});
 }
 
-function loadConfig(config) {
-	for(let key in config) {
-		if(config[key] instanceof Array) {
-			process.env[key] = config[key].join(',');
-		} else {
-			process.env[key] = config[key];
-		}
-	}
-}
+app.set('port', config.PORT);
+app.set('sslport', config.SSLPORT);
 
-
-app.set('port', process.env.PORT);
-app.set('sslport', process.env.SSLPORT);
-
-require('dotenv').load();
-const config = require('./src/express.config');
-config(app);
-if(process.env.REDIRECT_TO_HTTPS === 'true') {
+const expressConfig = require('./src/express.config');
+expressConfig(app);
+if(config.REDIRECT_TO_HTTPS === true) {
 	app.get('*', (req, res, next) => {
 		if(req.protocol !== 'https') {
 			const host = req.headers.host.substr(0, req.headers.host.indexOf(':'));
@@ -138,8 +127,8 @@ httpServer.listen(app.get('port'), function (err) {
 let httpsServer;
 try {
 	const options = {
-		key: fs.readFileSync(process.env.KEY),
-		cert: fs.readFileSync(process.env.CERTIFICATE)
+		key: fs.readFileSync(config.KEY),
+		cert: fs.readFileSync(config.CERTIFICATE)
 	};
 	httpsServer = https.createServer(options, app);
 	httpsServer.listen(app.get('sslport'), function (err) {

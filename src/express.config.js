@@ -1,6 +1,7 @@
 'use strict';
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const config = require('../prod.config');
 const express = require('express');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
@@ -21,13 +22,13 @@ module.exports = function (app) {
 			}
 		};
 		winston.handleExceptions(new winston.transports.File({
-			filename: process.env.LOG_FILE
+			filename: config.LOG_FILE
 		}));
 	}
 	app.use(logger('dev', logOption));
 
 	const oneDay = 86400000;
-	app.use(favicon(process.env.FAVICON));
+	app.use(favicon(config.FAVICON));
 	app.use('/public', express.static(
 		path.resolve('./public'),
 		{maxage: oneDay * 3}
@@ -43,7 +44,7 @@ module.exports = function (app) {
 		store: new FileStore({
 			ttl: 60 * 60 * 24, 
 			retries: 1, 
-			path: process.env.SESSION_STORE
+			path: config.SESSION_STORE
 		}),
 		cookie: {httpOnly: true}
 	}));

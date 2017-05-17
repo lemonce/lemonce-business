@@ -1,9 +1,10 @@
 'use strict';
 
-const USER = process.env.MYSQL_USER;
-const PASSWORD = process.env.MYSQL_PASSWORD;
-const DATABASE = process.env.MYSQL_DATABASE;
-const HOST = process.env.MYSQL_HOST;
+const config = require('../../prod.config');
+const USER = config.MYSQL_USER;
+const PASSWORD = config.MYSQL_PASSWORD;
+const DATABASE = config.MYSQL_DATABASE;
+const HOST = config.MYSQL_HOST;
 
 const mysql = require('mysql');
 const _ = require('lodash');

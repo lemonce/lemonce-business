@@ -74,4 +74,5 @@ export default {
 </script>
 <style scoped>
     @import '../style/index.css';
+    @import '../style/home.css';
 </style>

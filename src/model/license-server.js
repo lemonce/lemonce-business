@@ -1,6 +1,7 @@
+const config = require('../../prod.config');
 const rp = require('request-promise');
-const LICENSE_SERVER = process.env.LICENSE_SERVER;
-const LICENSE_ACTIVATE_PERIOD = parseInt(process.env.LICENSE_ACTIVATE_PERIOD);
+const LICENSE_SERVER = config.LICENSE_SERVER;
+const LICENSE_ACTIVATE_PERIOD = parseInt(config.LICENSE_ACTIVATE_PERIOD);
 
 exports.activate = function (userID, version, machineCode, period = LICENSE_ACTIVATE_PERIOD) {
 	const options = {

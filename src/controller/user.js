@@ -1,5 +1,6 @@
 'use strict';
 const createError = require('http-errors');
+const config = require('../../prod.config');
 const nodemailer = require('nodemailer');
 const wrap = require('co-express');
 const svgCaptcha = require('svg-captcha');
@@ -153,30 +154,30 @@ exports.resetPassword = wrap(function * (req, res, next) {
 
 function sendConfirmEmail(receiverAddress, verifiedCode) {
 	const mailOptions = {
-		from: process.env.EMAIL_SENDER_ADDRESS,
+		from: config.EMAIL_SENDER_ADDRESS,
 		to: receiverAddress,
 		subject: '[Lemonce] Lemonce Business Email Confirmation',
-		text: `Go to the link to activate your account. ${process.env.SERVER_HOST}/user/verify?eid=${verifiedCode}`
+		text: `Go to the link to activate your account. ${config.SERVER_HOST}/user/verify?eid=${verifiedCode}`
 	};
 	sendEmail(mailOptions);
 }
 
 function sendResetEmail(receiverAddress, token) {
 	const mailOptions = {
-		from: process.env.EMAIL_SENDER_ADDRESS,
+		from: config.EMAIL_SENDER_ADDRESS,
 		to: receiverAddress,
 		subject: '[Lemonce] Please Reset your password',
-		text: `Use the following link within the next 3 days to reset your password. ${process.env.SERVER_HOST}/#/reset_password/${token}`
+		text: `Use the following link within the next 3 days to reset your password. ${config.SERVER_HOST}/#/reset_password/${token}`
 	};
 	sendEmail(mailOptions);
 }
 
 function sendEmail(mailOptions) {
 	const transporter = nodemailer.createTransport({
-		service: process.env.EMAIL_SERVICE,
+		service: config.EMAIL_SERVICE,
 		auth: {
-			user: process.env.EMAIL_AUTH_USER,
-			pass: process.env.EMAIL_AUTH_PASSWORD
+			user: config.EMAIL_AUTH_USER,
+			pass: config.EMAIL_AUTH_PASSWORD
 		}
 	});
 	return new Promise((resolve, reject) => {
