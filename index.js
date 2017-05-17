@@ -69,7 +69,7 @@ if(config.REDIRECT_TO_HTTPS === true) {
 			if(host.indexOf(':')!=-1) {
 				host = host.substr(0, host.indexOf(':'));
 			}
-			res.redirect(`https://${host}:${app.get('sslport')}${req.url}`);
+			res.redirect(`https://${host}:${config.REDIRECT_PORT}${req.url}`);
 		} else {
 			next();
 		}
