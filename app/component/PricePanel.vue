@@ -10,7 +10,7 @@
                 <br><br>
                 <div class="row">
                     <div class="col-xs-6 col-xs-offset-3">
-                        <input type="button" class="btn btn-fill" @click="buyProduct(key)" value="Buy">
+                        <input type="button" class="btn btn-fill" @click="buyProduct(productId)" value="Buy">
                     </div>
                 </div>
             </div>
@@ -23,13 +23,15 @@ export default {
     props: [
         'price',
         'number',
-        'key',
+        'productId',
     ],
     computed: {
 
     },
     methods: {
-
+        buyProduct(productId) {
+            
+        }
     }
 }
 </script>

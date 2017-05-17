@@ -1,12 +1,13 @@
 <template>
     <div class="container">
         <div class="page-head">
-            <h2>产品购买</h2>
+            <h2>Product</h2>
         </div>
         <div class="row">
             <price-panel v-for="item in productList"
                     :price="item.price" 
                     :key="item.productId"
+                    :productId="item.productId"
                     :number="item.increment">
             </price-panel>
         </div>
@@ -22,7 +23,6 @@ export default {
     },
     computed: {
         productList() {
-            console.log(this.$store.getters['product/productList']);
             return this.$store.getters['product/productList'];
         }
     }

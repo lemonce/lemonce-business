@@ -328,7 +328,6 @@ for each row begin
 	update biz_user_summary set LIMITATION_NUMBER=LIMITATION_NUMBER-old.INCREMENT WHERE USER_ID = old.USER_ID;
 end $
 
-drop trigger if exists createSummary $
 drop trigger if exists createUser $
 create trigger createUser after insert on biz_user
 for each row begin

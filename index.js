@@ -65,7 +65,10 @@ expressConfig(app);
 if(config.REDIRECT_TO_HTTPS === true) {
 	app.get('*', (req, res, next) => {
 		if(req.protocol !== 'https') {
-			const host = req.headers.host.substr(0, req.headers.host.indexOf(':'));
+			let host = req.headers.host;
+			if(host.indexOf(':')!=-1) {
+				host = host.substr(0, host.indexOf(':'));
+			}
 			res.redirect(`https://${host}:${app.get('sslport')}${req.url}`);
 		} else {
 			next();
