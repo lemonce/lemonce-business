@@ -5,7 +5,7 @@
                 <h4>Lemonce</h4>
             </div>
             <div class="panel-body">
-                <h2>Price: ￥{{price}}</h2>
+                <h2>Price: ${{price}}</h2>
                 <i>Limitation Number: {{number}}</i>
                 <br><br>
                 <div class="row">

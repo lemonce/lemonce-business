@@ -6,7 +6,7 @@ export default {
 	},
 	getters: {
 		productList(state) {
-			return state.productList;
+			return state.productList.filter(product => product.marketId === 1);
 		}
 	},
 	actions: {
