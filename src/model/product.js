@@ -9,11 +9,11 @@ const joinUpdateSet = map.joinUpdateSet;
 const joinInsertSet = map.joinInsertSet;
 
 const BaseColumnList = [
-	'PRODUCT_ID', 'MARKET_ID', 'INCREMENT', 'PRICE'
+	'PRODUCT_ID', 'MARKET_ID', 'INCREMENT', 'PRICE', 'PUBLIC', 'URL', 'CURRENCY', 'DESCRIPTION'
 ];
 
 const BaseWriteList = [
-	'MARKET_ID', 'INCREMENT', 'PRICE'
+	'MARKET_ID', 'INCREMENT', 'PRICE', 'PUBLIC', 'URL', 'CURRENCY', 'DESCRIPTION'
 ];
 const ProductModel = {
 	create: function (product) {

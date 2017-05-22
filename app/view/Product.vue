@@ -8,7 +8,10 @@
                     :price="item.price" 
                     :key="item.productId"
                     :productId="item.productId"
-                    :number="item.increment">
+                    :number="item.increment"
+                    :currency = "item.currency"
+                    :url = "item.url"
+                    :description = "item.description">
             </price-panel>
         </div>
     </div>
