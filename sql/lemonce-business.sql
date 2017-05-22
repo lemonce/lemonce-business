@@ -53,7 +53,7 @@ CREATE TABLE `biz_limitation` (
   `PURCHASE_ID` varchar(100) DEFAULT NULL,
   `ACTIVED` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`LIMITATION_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,8 +152,12 @@ CREATE TABLE `biz_product` (
   `MARKET_ID` int(11) DEFAULT NULL,
   `INCREMENT` int(11) DEFAULT NULL,
   `PRICE` float DEFAULT NULL,
+  `PUBLIC` tinyint(1) DEFAULT '1',
+  `URL` varchar(200) DEFAULT NULL,
+  `CURRENCY` enum('CNY','USD','EUR','JPY','GBP') DEFAULT 'USD',
+  `DESCRIPTION` text,
   PRIMARY KEY (`PRODUCT_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -162,7 +166,7 @@ CREATE TABLE `biz_product` (
 
 LOCK TABLES `biz_product` WRITE;
 /*!40000 ALTER TABLE `biz_product` DISABLE KEYS */;
-INSERT INTO `biz_product` VALUES (1,1,10,100);
+INSERT INTO `biz_product` VALUES (1,1,10,100,1,'','USD','lemonce limitation');
 /*!40000 ALTER TABLE `biz_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -212,7 +216,7 @@ CREATE TABLE `biz_user` (
   `PHONE` varchar(45) DEFAULT NULL,
   `REGISTER_TIME` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`USER_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -246,7 +250,7 @@ CREATE TABLE `biz_user_detail` (
 
 LOCK TABLES `biz_user_detail` WRITE;
 /*!40000 ALTER TABLE `biz_user_detail` DISABLE KEYS */;
-INSERT INTO `biz_user_detail` VALUES (0,NULL);
+INSERT INTO `biz_user_detail` VALUES (0,'111');
 /*!40000 ALTER TABLE `biz_user_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,7 +312,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-05-17  0:09:23
+-- Dump completed on 2017-05-22 23:46:26
 -- TRIGGER
 
 delimiter $

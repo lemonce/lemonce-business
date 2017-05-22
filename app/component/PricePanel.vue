@@ -10,7 +10,7 @@
                 <br><br>
                 <div class="row">
                     <div class="col-xs-6 col-xs-offset-3">
-                        <input type="button" class="btn btn-fill" @click="buyProduct(url)" value="Buy">
+                        <a type="button" class="btn btn-fill" target="__blank" :href="url">Buy</a>
                     </div>
                 </div>
             </div>
@@ -32,14 +32,12 @@ export default {
         currencySymbol() {
             const currencyMap = {
                 'CNY': '¥',
-                'USD': '$'
+                'USD': '$',
+                'JPY': '¥',
+                'EUR': '€',
+                'GBP': '£'
             };
             return currencyMap[this.currency];
-        }
-    },
-    methods: {
-        buyProduct(url) {
-            window.open(url);
         }
     }
 }
