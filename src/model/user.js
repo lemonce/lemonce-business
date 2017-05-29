@@ -72,6 +72,14 @@ const UserModel = {
 	verifyEmail: function(emailVerifiedCode) {
 		return db.q(`UPDATE ${USER_TABLE} SET EMAIL_VERIFIED=1 WHERE EMAIL_VERIFIED_CODE=${db.escape(emailVerifiedCode)}`);
 	},
+	passwordChecker: {
+		password: {
+			isLength: {
+				options: [{min: 6, max: 30}]
+			},
+			errorMessage: 'invalid password'
+		}
+	},
 	bodyChecker: {
 		username: {
 			isLength: {

@@ -46,8 +46,8 @@ export default {
 		},
 		changePassword({commit}, userPassword) {
 			return Vue.http.patch('user/changepwd', {
-				password: userPassword.pwd,
-				newpassword: userPassword.newPwd
+				oldpassword: userPassword.pwd,
+				password: userPassword.newPwd
 			}).then(response => {
 				if(response.ok) {
 					return true;

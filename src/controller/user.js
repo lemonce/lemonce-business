@@ -91,8 +91,13 @@ exports.isExisted = wrap(function * (req, res) {
 });
 
 exports.changePassword = wrap(function * (req, res, next) {
-	const oldPwd = req.body.password;
-	const newPwd = req.body.newpassword;
+	req.checkBody(UserModel.passwordChecker);
+	const errors = req.validationErrors();
+	if (errors) {
+		return next(createError(400, 'Invalid password.'));
+	}
+	const oldPwd = req.body.oldpassword;
+	const newPwd = req.body.password;
 	const user = req.session.user;
 
 	if(!(yield UserModel.search(user.username, oldPwd))) {
@@ -138,6 +143,11 @@ exports.resetEmail = wrap(function * (req, res, next) {
 });
 
 exports.resetPassword = wrap(function * (req, res, next) {
+	req.checkBody(UserModel.passwordChecker);
+	const errors = req.validationErrors();
+	if (errors) {
+		return next(createError(400, 'Invalid password.'));
+	}
 	const token = req.body.token;
 	const password = req.body.password;
 

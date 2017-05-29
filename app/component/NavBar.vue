@@ -8,7 +8,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="#" class="navbar-brand">Lemonce</a>
+                <a href="https://www.lemonce.com" class="navbar-brand">Lemonce</a>
             </div>
             <div class="hidden-xs">
                 <ul class="nav navbar-nav">

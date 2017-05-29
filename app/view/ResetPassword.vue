@@ -12,6 +12,7 @@
     </div>
 
     <div class="panel col-sm-8 col-sm-offset-2 col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3">
+        <div class="register panel-pre"><router-link to="/">Sign in</router-link></div><br>
         <div class="panel-body">
             <form>
                 <div v-if="token">
