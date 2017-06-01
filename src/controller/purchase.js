@@ -1,8 +1,10 @@
 const wrap = require('co-express');
+const winston = require('winston');
 const NotificationModel = require('../model/notification');
 const PurchaseModel = require('../model/purchase');
 
 exports.receive = wrap(function * (req, res) {
+	winston.log('info', req.body);
 	let result = req.body;
 	result = result.e5Notification;
 	let notification = null, purchase = null;

@@ -13,7 +13,7 @@
             <div class="hidden-xs">
                 <ul class="nav navbar-nav">
                     <li><router-link to="/">Home</router-link></li>
-                    <li><router-link to="/product">Product</router-link></li>
+                    <li><router-link to="/product">Pricing</router-link></li>
                     <li><router-link to="/account/manage">Management</router-link></li>
                 </ul>
                 <div v-if="isLoggedIn">

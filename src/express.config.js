@@ -21,6 +21,11 @@ module.exports = function (app) {
 				write: message => winston.info(message)
 			}
 		};
+		winston.configure({
+			transports: [
+				new (winston.transports.File)({ filename: config.LOG_FILE })
+			]
+		});
 		winston.handleExceptions(new winston.transports.File({
 			filename: config.LOG_FILE
 		}));
