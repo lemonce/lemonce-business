@@ -21,11 +21,6 @@ module.exports = function (app) {
 				write: message => winston.info(message)
 			}
 		};
-		winston.configure({
-			transports: [
-				new (winston.transports.File)({ filename: config.LOG_FILE })
-			]
-		});
 		winston.handleExceptions(new winston.transports.File({
 			filename: config.LOG_FILE
 		}));
@@ -38,7 +33,9 @@ module.exports = function (app) {
 		path.resolve('./public'),
 		{maxage: oneDay * 3}
 	));
-	app.use(bodyParser.json());
+	app.use(bodyParser.json({
+		type: '*/json'
+	}));
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(cookieParser());
 	app.use(validator());

@@ -1,4 +1,13 @@
 import Vue from 'vue';
+
+function compare(key) {
+	return function(a,b){
+		const value1 = a[key];
+		const value2 = b[key];
+		return value1 - value2;
+	};
+}
+
 export default {
 	namespaced: true,
 	state: {
@@ -6,7 +15,7 @@ export default {
 	},
 	getters: {
 		productList(state) {
-			return state.productList.filter(product => product.public === 1);
+			return state.productList.filter(product => product.public === 1).sort(compare('price'));
 		}
 	},
 	actions: {
