@@ -37,5 +37,8 @@ module.exports = {
 	// page info
 	PAGE_TITLE: 'Lemonce-Business',
 	PAGE_DESCRIPTION: 'lemonce-business',
-	PAGE_KEYWORDS: ['lemonce', 'license']
+	PAGE_KEYWORDS: ['lemonce', 'license'],
+
+	// logo link
+	HOME_LINK: 'http://www.lemonce.com'
 };

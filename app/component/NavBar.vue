@@ -8,7 +8,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="https://www.lemonce.com" class="navbar-brand">Lemonce</a>
+                <a :href="homeLink" class="navbar-brand">Lemonce</a>
             </div>
             <div class="hidden-xs">
                 <ul class="nav navbar-nav">
@@ -53,6 +53,8 @@
 </nav>
 </template>
 <script>
+const config = require('../../prod.config');
+
 export default {
     name: 'NavBar',
     computed: {
@@ -64,6 +66,9 @@ export default {
         },
         showNavList() {
             return this.$store.getters.showNavList;
+        },
+        homeLink() {
+            return config.HOME_LINK;
         }
     },
     methods: {
