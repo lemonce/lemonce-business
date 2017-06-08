@@ -1,0 +1,6 @@
+Thank you for choosing our product.
+Here is the activation link for you: <%= link%>. 
+Lemonce is an automated web UI testing tool that lets you create and perform functional tests with less effort. 
+For more features,please visit our official website at http://www.lemonce.com/. 
+If you have any questions,please contact us and submit your issue at http://www.lemonce.com/contact.html.
+or-change, Co., Ltd. Li Qi Zhuang Street Lingao Creative Industry Park,Tianjin

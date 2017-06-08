@@ -1,7 +1,7 @@
 const {resolve} = require('path');
 module.exports = {
 	// production or dev
-	NODE_ENV: 'dev',
+	NODE_ENV: 'development',
 
 	// database connection
 	MYSQL_USER: 'root',
@@ -29,6 +29,7 @@ module.exports = {
 	LICENSE_ACTIVATE_PERIOD: 7200,
 
 	// email account
+	EMAIL_TEMPLATE: resolve(__dirname, 'public/template'),
 	EMAIL_SERVICE: 'QQ',
 	EMAIL_AUTH_USER: '46922547@qq.com',
 	EMAIL_AUTH_PASSWORD: 'xvxrdpjmqsrqbicd',

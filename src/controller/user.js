@@ -1,12 +1,15 @@
 'use strict';
 const createError = require('http-errors');
 const config = require('../../prod.config');
+const fs = require('fs');
 const nodemailer = require('nodemailer');
+const path = require('path');
 const wrap = require('co-express');
 const svgCaptcha = require('svg-captcha');
 const DetailModel = require('../model/detail');
 const UserModel = require('../model/user');
 const ResetModel = require('../model/reset');
+const _ = require('lodash');
 
 exports.login = wrap(function * (req, res, next) {
 	const username = req.body.username;
@@ -162,12 +165,17 @@ exports.resetPassword = wrap(function * (req, res, next) {
 	res.status(200).json({});
 });
 
+function rand(n) {
+	return Math.floor(Math.random()*n+1);
+}
+
 function sendConfirmEmail(receiverAddress, verifiedCode) {
+	const compiled = _.template(fs.readFileSync(path.join(config.EMAIL_TEMPLATE, `email${rand(5)}`)));
 	const mailOptions = {
 		from: config.EMAIL_SENDER_ADDRESS,
 		to: receiverAddress,
 		subject: '[Lemonce] Lemonce Business Email Confirmation',
-		text: `Go to the link to activate your account. ${config.SERVER_HOST}/user/verify?eid=${verifiedCode}`
+		text: compiled({link: `${config.SERVER_HOST}/user/verify?eid=${verifiedCode}`})
 	};
 	sendEmail(mailOptions);
 }
