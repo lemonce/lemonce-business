@@ -62,6 +62,12 @@ app.set('sslport', config.SSLPORT);
 
 const expressConfig = require('./src/express.config');
 expressConfig(app);
+
+if(fs.existsSync(config.EMAIL_TEMPLATE)) {
+	const lockFile = fs.createReadStream(path.join(config.EMAIL_TEMPLATE, 'email.lock'));
+} else {
+	throw new Error(`Can not find email template file at: ${config.EMAIL_TEMPLATE}, please check in config file`);
+}
 if(config.REDIRECT_TO_HTTPS === true) {
 	app.get('*', (req, res, next) => {
 		if(req.protocol !== 'https') {
